@@ -1,11 +1,11 @@
 <?php
-require_once(__DIR__ . '/../../config.inc.php');
+require_once(__DIR__ . '/../smcanvaslib/config.inc.php');
 require_once(__DIR__ . '/../config.inc.php');
 require_once(__DIR__ . '/../.ignore.grading-analytics-authentication.inc.php');
-require_once(APP_PATH . '/include/debug.inc.php');
+require_once(SMCANVASLIB_PATH . '/include/debug.inc.php');
 define('DEBUGGING', DEBUGGING_LOG);
-require_once(APP_PATH . '/include/canvas-api.inc.php');
-require_once(APP_PATH . '/include/mysql.inc.php');
+require_once(SMCANVASLIB_PATH . '/include/canvas-api.inc.php');
+require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
 
 function collectStatistics($term) {
 	$coursesApi = new CanvasApiProcess(CANVAS_API_URL, CANVAS_API_TOKEN);

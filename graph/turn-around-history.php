@@ -1,11 +1,11 @@
 <?php
 
-require_once(__DIR__ . '/../../config.inc.php');
+require_once(__DIR__ . '/../smcanvaslib/config.inc.php');
 require_once(__DIR__ . '/../config.inc.php');
 require_once(__DIR__ . '/../common.inc.php');
 require_once(__DIR__ . '/../.ignore.grading-analytics-authentication.inc.php');
-require_once(APP_PATH . '/include/mysql.inc.php');
-require_once(APP_PATH . '/include/phpgraphlib.php');
+require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
+require_once(SMCANVASLIB_PATH . '/include/phpgraphlib.php');
 
 $stats = mysqlQuery("
 	SELECT * FROM `course_statistics`

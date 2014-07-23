@@ -1,9 +1,9 @@
 <?php
 
-require_once(__DIR__ . '/../config.inc.php');
+require_once(__DIR__ . '/smcanvaslib/config.inc.php');
 require_once(__DIR__ . '/.ignore.grading-analytics-authentication.inc.php');
 require_once(__DIR__ . '/config.inc.php');
-require_once(APP_PATH . '/include/mysql.inc.php');
+require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
 
 $GRAPH_DATA_COUNT = 0;
 function graphWidth($dataCount = false) {
