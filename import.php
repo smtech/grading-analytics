@@ -29,6 +29,12 @@ define('WARNING_REGEXP_FILTER', '<em>Note:</em> The regular expression match is 
 
 require_once(__DIR__ . '/common.inc.php');
 
+if (isset($argc)) {
+	$_REQUEST['cal'] = $argv[1];
+	$_REQUEST['canvas_url'] = $argv[2];
+	$_REQUEST['schedule'] = $argv[3];
+}
+
 /**
  * compute the calendar context for the canvas object based on its URL
  **/
