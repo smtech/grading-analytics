@@ -26,7 +26,7 @@ while($schedule = $schedulesResponse->fetch_assoc()) {
 				`id` = '{$schedule['calendar']}'
 	");
 	if ($calendar = $calendarResponse->fetch_assoc()) {
-		shell_exec('php import.php ' . urlencode($calendar['ics_url']) . ' ' . urlencode($calendar['canvas_url']) . ' ' . urlencode($schedule['id']));
+		shell_exec('curl -u ' . MYSQL_USER . ':' . MYSQL_PASSWORD . ' -k "https://skunkworks.stmarksschool.org/canvas/ics-sync/import.php?cal=' . urlencode($calendar['ics_url']) . '&canvas_url=' . urlencode($calendar['canvas_url']) . '&schedule=' . urlencode($schedule['id']) . '"');
 	}
 }
 
