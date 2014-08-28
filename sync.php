@@ -26,7 +26,7 @@ while($schedule = $schedulesResponse->fetch_assoc()) {
 				`id` = '{$schedule['calendar']}'
 	");
 	if ($calendar = $calendarResponse->fetch_assoc()) {
-		shell_exec("php import.php {$calendar['ics_url']} {$calendar['canvas_url']} {$schedule['id']}");
+		shell_exec('php import.php ' . urlencode($calendar['ics_url']) . ' ' . urlencode($calendar['canvas_url']) . ' ' . urlencode($schedule['id']));
 	}
 }
 
