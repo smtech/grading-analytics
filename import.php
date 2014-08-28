@@ -34,7 +34,6 @@ if (isset($argc)) {
 	$_REQUEST['canvas_url'] = urldecode($argv[2]);
 	$_REQUEST['schedule'] = urldecode($argv[3]);
 }
-print_r($_REQUEST);
 
 /**
  * compute the calendar context for the canvas object based on its URL
