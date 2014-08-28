@@ -25,7 +25,7 @@ Note that the allow_webcals setting allows webcals to be passed as URLs.  You do
 
 The salt parameter is used to obfuscate things like webcal links that may have usernames and passwords.  This should be changed.
 */
-     'calendar_path'        => '/var/www-data/canvas/calendar-ics',
+     'calendar_path'        => '/var/www-data/canvas/ics-sync',
 #     'default_path'         => '', 	
 #     'save_parsed_cals'     => 'yes', 
 #     'cookie_uri'           => '', 
