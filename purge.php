@@ -19,8 +19,6 @@ $events = $eventsApi->get('calendar_events',
 		'context_codes[]' => preg_replace('|.*/courses/(\d+)/?.*|', "course_$1", $_REQUEST['course_url'])
 	)
 );
-print_r($events);
-exit;
 do {
 	foreach($events as $event) {
 		$api->delete("calendar_events/{$event['id']}",
