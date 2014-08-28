@@ -12,7 +12,7 @@ $api = new CanvasApiProcess(CANVAS_API_URL, CANVAS_API_TOKEN);
 
 // TODO work nicely with the cache (purge uncached events, or only cached events, etc.)
 
-$events = $eventsApi->get('calendar_events'
+$events = $eventsApi->get('calendar_events'.
 	array(
 		'type' => 'event',
 		'all_events' => true,
