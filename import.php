@@ -162,6 +162,7 @@ if (isset($_REQUEST['cal']) && isset($_REQUEST['canvas_url'])) {
 					INSERT INTO `calendars`
 						(
 							`id`,
+							`name`,
 							`ics_url`,
 							`canvas_url`,
 							`synced`,
@@ -171,6 +172,7 @@ if (isset($_REQUEST['cal']) && isset($_REQUEST['canvas_url'])) {
 						)
 						VALUES (
 							'$pairingHash',
+							'{$master_array['calendar_name']}',
 							'{$_REQUEST['cal']}',
 							'{$canvasContext['canonical_url']}',
 							'" . getSyncTimestamp() . "',
