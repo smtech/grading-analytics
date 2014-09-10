@@ -17,7 +17,7 @@ function collectStatistics($term) {
 		'/accounts/132/courses',
 		array(
 			'with_enrollments' => 'true',
-			'enrollment_term_id' => $term // FIXME: this is only 2013-2014 Full year
+			'enrollment_term_id' => $term
 		)
 	);
 	
@@ -165,10 +165,19 @@ function collectStatistics($term) {
 
 debugFlag('START');
 
-// FIXME a more elegant solution would be to query for terms that are currently active and then loop across them
-collectStatistics(106);
-collectStatistics(107);
-collectStatistics(108);
+/* collect data on terms currently in session */
+$api = new CanvasApiProcess(CANVAS_API_URL, CANVAS_API_TOKEN);
+$terms = $api->get('accounts/1/terms');
+$now = strtotime('now');
+do {
+	foreach ($terms['enrollment_terms'] as $term) {
+		if (isset($term['start_at']) && isset($term['end_at'])) {
+			if ((strtotime($term['start_at']) <= $now) && ($now <= strtotime($term['end_at']))) {
+				collectStatistics($term['id']);
+			}
+		}
+	}
+} while ($terms = $api->nextPage());
 
 /* check to see if this data collection has been scheduled. If it hasn't,
    schedule it to run nightly. */
