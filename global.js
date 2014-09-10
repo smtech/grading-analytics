@@ -1,14 +1,16 @@
 /*jslint browser: true, devel: true, eqeq: true, plusplus: true, sloppy: true, vars: true, white: true */
 
 var STMARKS = {
-	waitForDOMDelay: 100 // milliseconds
+	waitForDOMDelay: 100, // milliseconds
+	user_id: document.getElementById('identity').getElementsByClassName('user_id')[0].innerHTML,
+	canvas_instance: window.location.host
 };
 
 /* wait for a particular DOM element to be ready (i.e. created) and then call
    a function to take the next steps. Used thus:
    
-	function test(element) {
-		alert(element.innerHTML);
+	function test(DOMElement) {
+		alert(DOMElement.innerHTML);
 	}
 	stmarks_waitForDOMById(/.*\/courses\/\d+\/settings/, 'right-side', test);
 	
@@ -20,9 +22,9 @@ var STMARKS = {
 	itself matches. */
 function stmarks_waitForDOMById(UrlPattern, nodeId, callback) {
 	if (UrlPattern.test(document.location.href)) {
-		var element = document.getElementById(nodeId);
-		if (element !== undefined) {
-			callback(element);
+		var DOMElement = document.getElementById(nodeId);
+		if (DOMElement !== undefined) {
+			callback(DOMElement);
 		} else {
 			window.setTimeout(
 				function() {
@@ -38,9 +40,9 @@ function stmarks_waitForDOMById(UrlPattern, nodeId, callback) {
 
 function stmarks_waitForDOMByClassName(UrlPattern, className, callback) {
 	if (UrlPattern.test(document.location.href)) {
-		var elements = document.getElementsByClassName(className);
-		if (elements !== undefined) {
-			callback(elements);
+		var DOMElements = document.getElementsByClassName(className);
+		if (DOMElements !== undefined) {
+			callback(DOMElements);
 		} else {
 			window.setTimeout(
 				function() {
@@ -70,7 +72,7 @@ function stmarks_globalJavascript() {
 	// http://stackoverflow.com/a/950146
 
 	$.getScript(
-		pathToScripts + 'grading-analytics.js',
+		pathToScripts + 'grading-analytics.php?user_id=' + STMARKS.user_id + '&location=' + window.location,
 		function() {
 			stmarks_gradingAnalytics();
 		}

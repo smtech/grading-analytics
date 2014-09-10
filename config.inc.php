@@ -27,4 +27,6 @@ define('GRAPH_BAR_WIDTH', 10); // how many pixels to allocate per data point in 
 define('GRAPH_ASPECT_RATIO', 0.375); // generic aspect ratio for all graphs
 define('GRAPH_INSET_WIDTH', '40%'); // width of the inset departmental graphs in the column
 
+require_once(__DIR__ . '/smcanvaslib/config.inc.php');
+
 ?>
