@@ -53,8 +53,6 @@ function collectStatistics($term) {
 					$teacherNames[] = $teacher['user']['sortable_name'];
 				}
 			} while ($teachers = $lookupApi->nextPage());
-			print_r($teacherIds);
-			print_r($teacherNames);
 			$statistic['teacher[id]s'] = serialize($teacherIds);
 			$statistic['teacher[sortable_name]s'] = serialize($teacherNames);
 			
