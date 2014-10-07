@@ -40,6 +40,7 @@ function collectStatistics($term) {
 			);
 		
 			$teacherIds = array();
+			$teacherNames = array();
 			$teachers = $lookupApi->get(
 				"/courses/{$course['id']}/enrollments",
 				array(
@@ -48,10 +49,17 @@ function collectStatistics($term) {
 			);
 			do {
 				foreach ($teachers as $teacher) {
-					$teacherIds[] = $teacher['id'];
+					$teacherIds[] = $teacher['user']['id'];
+					$teacherNames[] = $teacher['user']['sortable_name'];
 				}
 			} while ($teachers = $lookupApi->nextPage());
+			print_r($teacherIds);
+			print_r($teacherNames);
 			$statistic['teacher[id]s'] = serialize($teacherIds);
+			$statistic['teacher[sortable_name]s'] = serialize($teacherNames);
+			
+			$account = $lookupApi->get("/accounts/{$course['account_id']}");
+			$statistic['account[name]'] = $account['name'];
 			
 			// ignore classes with no teachers (how do they even exist? weird.)
 			if (count($teacherIds) != 0) {
@@ -59,8 +67,7 @@ function collectStatistics($term) {
 				$students = $lookupApi->get(
 					"/courses/{$course['id']}/enrollments",
 					array(
-						'type[]' => 'StudentEnrollment',
-						'per_page' => 50
+						'type[]' => 'StudentEnrollment'
 					)
 				);
 				do {
@@ -114,10 +121,12 @@ function collectStatistics($term) {
 												if (strtotime($assignment['due_at']) < strtotime($statistic['oldest_ungraded_assignment_due_date'])) {
 													$statistic['oldest_ungraded_assignment_due_date'] = $assignment['due_at'];
 													$statistic['oldest_ungraded_assignment_url'] = $assignment['html_url'];
+													$statistic['oldest_ungraded_assignment_name'] = $assignment['name'];
 												}
 											} else {
 												$statistic['oldest_ungraded_assignment_due_date'] = $assignment['due_at'];
 												$statistic['oldest_ungraded_assignment_url'] = $assignment['html_url'];
+												$statistic['oldest_ungraded_assignment_name'] = $assignment['name'];
 											}
 										}
 									}
