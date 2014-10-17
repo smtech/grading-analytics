@@ -36,7 +36,8 @@ function collectStatistics($term) {
 				'dateless_assignment_count' => 0,
 				'gradeable_assignment_count' => 0,
 				'graded_assignment_count' => 0,
-				'zero_point_assignment_count' => 0
+				'zero_point_assignment_count' => 0,
+				'analytics_page' => APP_URL . "/course_summary.php?course_id={$course['id']}"
 			);
 		
 			$teacherIds = array();

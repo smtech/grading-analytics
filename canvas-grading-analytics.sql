@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
-# Host: 127.0.0.1 (MySQL 5.5.38-0ubuntu0.12.04.1)
+# Host: 127.0.0.1 (MySQL 5.5.38-0ubuntu0.14.04.1)
 # Database: canvas-grading-analytics
-# Generation Time: 2014-10-07 20:40:28 +0000
+# Generation Time: 2014-10-17 11:47:05 +0000
 # ************************************************************
 
 
@@ -24,7 +24,7 @@
 # ------------------------------------------------------------
 
 CREATE TABLE `course_statistics` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for this statistic',
   `timestamp` text NOT NULL COMMENT 'When this statistic was collected',
   `course[id]` int(11) NOT NULL COMMENT 'Canvas course ID',
   `course[name]` text NOT NULL COMMENT 'Human-readable course name, as listed in Canvas',
@@ -38,12 +38,13 @@ CREATE TABLE `course_statistics` (
   `graded_assignment_count` int(11) NOT NULL COMMENT 'The number of graded, non-zero-point assignments with due dates prior to the timstamp of this statistic for which at least one submission has been graded',
   `oldest_ungraded_assignment_due_date` text NOT NULL COMMENT 'Due date of the oldest graded, non-zero-point assignment due prior to the timestamp of this statistic for which no submissions have grades entered.',
   `oldest_ungraded_assignment_url` text NOT NULL COMMENT 'URL of the oldest ungraded assignment',
-  `average_grading_turn_around` text NOT NULL COMMENT 'Of those assignments that were due prior to the timestamp of this statistic for which at least one submission has been graded, what is the average turn-around time (in days) for those submission grades?',
   `oldest_ungraded_assignment_name` text NOT NULL COMMENT 'Human-readable name of the oldest ungraded assignment',
+  `average_grading_turn_around` text NOT NULL COMMENT 'Of those assignments that were due prior to the timestamp of this statistic for which at least one submission has been graded, what is the average turn-around time (in days) for those submission grades?',
   `zero_point_assignment_count` int(11) NOT NULL COMMENT 'Many zero-point assignments suggest that the teacher is not using the "not graded" option',
   `average_submissions_graded` float NOT NULL COMMENT 'Of assignments due prior to this statistic timestamp, for which at least one submission has been graded, what percentage of the overall submissions for each assignment have been graded?',
   `gradebook_url` text NOT NULL COMMENT 'URL of the course gradebook',
   `student_count` int(11) NOT NULL COMMENT 'The number of student enrollments in this course. (Not yet filtering out the Test Student enrollments.)',
+  `analytics_page` text NOT NULL COMMENT 'URL of the course grading analytics page',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
