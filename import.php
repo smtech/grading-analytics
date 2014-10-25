@@ -83,8 +83,8 @@ function filterEvent($event, $calendarCache) {
 	/* strip HTML tags from the event title */
 	$event['event_text'] = strip_tags($event['event_text']);
 	
-	$includeMatches = null;
-	$excludeMatches = null;
+	$include = null;
+	$exclude = null;
 	
 	preg_match("%{$calendarCache['include_regexp']}%", $event['event_text'], $include);
 	preg_match("%{$calendarCache['exclude_regexp']}%", $event['event_text'], $exclude);
@@ -177,8 +177,8 @@ if (isset($_REQUEST['cal']) && isset($_REQUEST['canvas_url'])) {
 							'{$canvasContext['canonical_url']}',
 							'" . getSyncTimestamp() . "',
 							'" . ($_REQUEST['enable_regexp_filter'] == VALUE_ENABLE_REGEXP_FILTER) . "',
-							" . ($_REQUEST['enable_regexp_filter'] == VALUE_ENABLE_REGEXP_FILTER ? "'{$_REQUEST['include_regexp']}'" : 'NULL') . ",
-							" . ($_REQUEST['enable_regexp_filter'] == VALUE_ENABLE_REGEXP_FILTER ? "'{$_REQUEST['exclude_regexp']}'" : 'NULL') . "
+							" . ($_REQUEST['enable_regexp_filter'] == VALUE_ENABLE_REGEXP_FILTER ? "'" . addslashes($_REQUEST['include_regexp']) . "'" : 'NULL') . ",
+							" . ($_REQUEST['enable_regexp_filter'] == VALUE_ENABLE_REGEXP_FILTER ? "'" . addslashes($_REQUEST['exclude_regexp']) . "'" : 'NULL') . "
 						)
 				");
 			}
