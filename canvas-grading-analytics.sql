@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
-# Host: 127.0.0.1 (MySQL 5.5.38-0ubuntu0.14.04.1)
+# Host: 127.0.0.1 (MySQL 5.5.40-0ubuntu0.12.04.1)
 # Database: canvas-grading-analytics
-# Generation Time: 2014-10-17 11:47:05 +0000
+# Generation Time: 2014-11-27 19:56:53 +0000
 # ************************************************************
 
 
@@ -34,6 +34,7 @@ CREATE TABLE `course_statistics` (
   `teacher[sortable_name]s` text NOT NULL COMMENT 'Serialized list of human-readable teacher names',
   `assignments_due_count` int(11) NOT NULL COMMENT 'The overall number of assignments with due dates prior to the timestamp, including both graded and ungraded assignments and zero-point assignments.',
   `dateless_assignment_count` int(11) NOT NULL COMMENT 'Assignments that lack due dates.',
+  `average_assignment_lead_time` double NOT NULL COMMENT 'The average amount of time, in days, between when the assignment was created and when it is due.',
   `gradeable_assignment_count` int(11) NOT NULL COMMENT 'The number of gradeable, non-zero-point, assignments posted in this course with due dates prior to this statistic collection timestamp',
   `graded_assignment_count` int(11) NOT NULL COMMENT 'The number of graded, non-zero-point assignments with due dates prior to the timstamp of this statistic for which at least one submission has been graded',
   `oldest_ungraded_assignment_due_date` text NOT NULL COMMENT 'Due date of the oldest graded, non-zero-point assignment due prior to the timestamp of this statistic for which no submissions have grades entered.',

@@ -81,6 +81,7 @@ function collectStatistics($term) {
 
 					$gradedSubmissionsCount = 0;
 					$turnAroundTimeTally = 0;
+					$leadTimeTally = 0;
 					do {
 						
 						foreach ($assignments as $assignment) {
@@ -92,6 +93,8 @@ function collectStatistics($term) {
 								$dueDate = new DateTime($assignment['due_at']);
 								if (($timestamp - $dueDate->getTimestamp()) > 0) {
 									$statistic['assignments_due_count']++;
+									
+									$leadTimeTally += strtotime($assignment['due_at']) - strtotime($assignment['created_at']);
 									
 									// ignore ungraded assignments
 									if ($assignment['grading_type'] != 'not_graded')
@@ -147,6 +150,11 @@ function collectStatistics($term) {
 					// calculate average submissions graded per assignment (if non-zero)
 					if ($statistic['gradeable_assignment_count'] && $statistic['student_count']) {
 						$statistic['average_submissions_graded'] = $gradedSubmissionsCount / ($statistic['gradeable_assignment_count'] * $statistic['student_count']);
+					}
+					
+					// calculate the average lead-time on assignments
+					if ($statistic['assignments_due_count']) {
+						$statistic['average_assignment_lead_time'] = $leadTimeTally / $statistic['assignments_due_count'] / 60 / 60 / 24;
 					}
 					
 					// calculate average grading turn-around per submission
