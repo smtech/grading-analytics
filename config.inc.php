@@ -29,4 +29,7 @@ define('GRAPH_INSET_WIDTH', '40%'); // width of the inset departmental graphs in
 
 require_once(__DIR__ . '/smcanvaslib/config.inc.php');
 
+if (!defined('APP_URL')) {
+	define('APP_URL',"http://skunkworks.stmarksschool.org/canvas/javascript/grading-analytics");
+}
 ?>
