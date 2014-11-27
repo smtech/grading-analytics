@@ -178,7 +178,7 @@ if (strlen($statistic['oldest_ungraded_assignment_url'])) {
 				
 		<h4>What could this mean?</h4>
 		
-		<p>This is the oldest assignment (sorted by due date) for which no student submissions have received a grade. This could mean exactly what it appears to mean. However, it may also mean that this was a zero-point or ungraded assignment &mdash; that is, an assignment that was <a href="http://stmarks-tech-tips.blogspot.com/2013/10/how-do-i-create-ungraded-assignment.html" target="_blank">never <i>meant</i> to receive a grade</a> &mdash; that was mismarked.</p>';
+		<p>This is the oldest assignment (sorted by due date) for which no student submissions have received a grade. This could mean exactly what it appears to mean. It could be an extra credit (or test corrections) assignment. However, it may also mean that this was a zero-point or ungraded assignment &mdash; that is, an assignment that was <a href="http://stmarks-tech-tips.blogspot.com/2013/10/how-do-i-create-ungraded-assignment.html" target="_blank">never <i>meant</i> to receive a grade</a> &mdash; that was mismarked.</p>';
 } else {
 	$numbers .= '<h3>No assignment is ungraded</h3>';
 }
