@@ -59,7 +59,7 @@ function collectStatistics($term) {
 			
 			$account = $lookupApi->get("/accounts/{$course['account_id']}");
 			$statistic['account[name]'] = $account['name'];
-			
+
 			// ignore classes with no teachers (how do they even exist? weird.)
 			if (count($teacherIds) != 0) {
 				$statistic['student_count'] = 0;
@@ -78,9 +78,10 @@ function collectStatistics($term) {
 					$assignments = $assignmentsApi->get(
 						"/courses/{$course['id']}/assignments"
 					);
+
+					$gradedSubmissionsCount = 0;
+					$turnAroundTimeTally = 0;
 					do {
-						$gradedSubmissionsCount = 0;
-						$turnAroundTimeTally = 0;
 						
 						foreach ($assignments as $assignment) {
 							
@@ -89,7 +90,7 @@ function collectStatistics($term) {
 								
 								// check for due dates
 								$dueDate = new DateTime($assignment['due_at']);
-								if ($timestamp - $dueDate->getTimestamp() > 0) {
+								if (($timestamp - $dueDate->getTimestamp()) > 0) {
 									$statistic['assignments_due_count']++;
 									
 									// ignore ungraded assignments
@@ -113,7 +114,10 @@ function collectStatistics($term) {
 															$statistic['graded_assignment_count']++;
 														}
 														$gradedSubmissionsCount++;
-														$turnAroundTimeTally += strtotime($submission['graded_at']) - strtotime($assignment['due_at']);
+														$turnAroundTimeTally += max(
+															0,
+															strtotime($submission['graded_at']) - strtotime($assignment['due_at'])
+														);
 													}
 												}
 											} while ($submissions = $lookupApi->nextPage());
@@ -142,7 +146,7 @@ function collectStatistics($term) {
 					
 					// calculate average submissions graded per assignment (if non-zero)
 					if ($statistic['gradeable_assignment_count'] && $statistic['student_count']) {
-						$statistic['average_submissions_graded'] = $gradedSubmissionsCount / $statistic['gradeable_assignment_count'] / $statistic['student_count'];
+						$statistic['average_submissions_graded'] = $gradedSubmissionsCount / ($statistic['gradeable_assignment_count'] * $statistic['student_count']);
 					}
 					
 					// calculate average grading turn-around per submission
