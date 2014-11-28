@@ -34,6 +34,7 @@ function collectStatistics($term) {
 				'gradebook_url' => 'https://' . parse_url(CANVAS_API_URL, PHP_URL_HOST) . "/courses/{$course['id']}/gradebook2",
 				'assignments_due_count' => 0,
 				'dateless_assignment_count' => 0,
+				'created_after_due_count' => 0,
 				'gradeable_assignment_count' => 0,
 				'graded_assignment_count' => 0,
 				'zero_point_assignment_count' => 0,
@@ -94,7 +95,13 @@ function collectStatistics($term) {
 								if (($timestamp - $dueDate->getTimestamp()) > 0) {
 									$statistic['assignments_due_count']++;
 									
+									// tally lead time on the assignment
 									$leadTimeTally += strtotime($assignment['due_at']) - strtotime($assignment['created_at']);
+									
+									// was the assignment created after it was due?
+									if (strtotime($assignment['due_at']) < strtotime($assignment['created_at'])) {
+										$statistic['created_after_due_count']++;
+									}
 									
 									// ignore ungraded assignments
 									if ($assignment['grading_type'] != 'not_graded')
