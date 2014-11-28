@@ -27,7 +27,11 @@ $query = "
 
 if ($stats = mysqlQuery($query)) {
 	$data = array();
+	$courseName = '';
 	while ($row = $stats->fetch_assoc()) {
+		if ($row['course[id]'] == $_REQUEST['course_id']) {
+			$courseName = $row['course[name]'];
+		}
 		$data[$row['course[id]']] = $row['average_grading_turn_around'];
 	}
 	asort($data);
@@ -44,6 +48,9 @@ if ($stats = mysqlQuery($query)) {
 	$graph->addData($highlight);
 	$graph->setBarColor(GRAPH_DATA_COLOR, GRAPH_HIGHLIGHT_COLOR);
 	$graph->setBarOutline(false);
+	$graph->setLegend(true);
+	$graph->setLegendTitle('Everyone else', $courseName);
+	$graph->setLegendOutlineColor('white');
 	$graph->setGoalLine(averageTurnAround(
 		(
 			isset($_REQUEST['department_id'])) ?

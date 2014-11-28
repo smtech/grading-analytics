@@ -7,6 +7,31 @@ define('DEBUGGING', DEBUGGING_LOG);
 require_once(SMCANVASLIB_PATH . '/include/canvas-api.inc.php');
 require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
 
+// http://stackoverflow.com/a/21896310
+function hoursRange( $lower = 0, $upper = 86400, $step = 3600, $keyFormat = '' , $value = '', $valueIsFormat = false) {
+    $times = array();
+
+    if ( empty( $value ) && $valueIsFormat) {
+        $value = 'g:i a';
+    }
+    
+    if ( empty($keyFormat)) {
+	    $keyFormat = 'g:i a';
+    }
+
+    foreach ( range( $lower, $upper, $step ) as $increment ) {
+        $increment = gmdate( $keyFormat, $increment );
+
+        list( $hour, $minutes ) = explode( ':', $increment );
+
+        $date = new DateTime( $hour . ':' . $minutes );
+
+        $times[(string) $increment] = ($valueIsFormat ? $date->format( $value ) : $value);
+    }
+
+    return $times;
+}
+
 function collectStatistics($term) {
 	$coursesApi = new CanvasApiProcess(CANVAS_API_URL, CANVAS_API_TOKEN);
 	$assignmentsApi = new CanvasApiProcess(CANVAS_API_URL, CANVAS_API_TOKEN);
@@ -38,7 +63,7 @@ function collectStatistics($term) {
 				'gradeable_assignment_count' => 0,
 				'graded_assignment_count' => 0,
 				'zero_point_assignment_count' => 0,
-				'analytics_page' => APP_URL . "/course_summary.php?course_id={$course['id']}"
+				'analytics_page' => APP_URL . "/course-summary.php?course_id={$course['id']}"
 			);
 		
 			$teacherIds = array();
@@ -83,6 +108,10 @@ function collectStatistics($term) {
 					$gradedSubmissionsCount = 0;
 					$turnAroundTimeTally = 0;
 					$leadTimeTally = 0;
+					$createdModifiedHistogram = array(
+						HISTOGRAM_CREATED => hoursRange(0, 86400, 3600, '', 0),
+						HISTOGRAM_MODIFIED => hoursRange(0, 86400, 3600, '', 0)
+					);
 					do {
 						
 						foreach ($assignments as $assignment) {
@@ -94,6 +123,10 @@ function collectStatistics($term) {
 								$dueDate = new DateTime($assignment['due_at']);
 								if (($timestamp - $dueDate->getTimestamp()) > 0) {
 									$statistic['assignments_due_count']++;
+									
+									// update created_modified_histogram
+									$createdModifiedHistogram[HISTOGRAM_CREATED][date("g:00 a", strtotime($assignment['created_at']))]++;
+									$createdModifiedHistogram[HISTOGRAM_MODIFIED][date("g:00 a", strtotime($assignment['due_at']))]++;
 									
 									// tally lead time on the assignment
 									$leadTimeTally += strtotime($assignment['due_at']) - strtotime($assignment['created_at']);
@@ -153,6 +186,8 @@ function collectStatistics($term) {
 							}
 						}
 					} while ($assignments = $assignmentsApi->nextPage());
+					
+					$statistic['created_modified_histogram'] = serialize($createdModifiedHistogram);
 					
 					// calculate average submissions graded per assignment (if non-zero)
 					if ($statistic['gradeable_assignment_count'] && $statistic['student_count']) {

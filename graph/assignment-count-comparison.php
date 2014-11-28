@@ -23,9 +23,13 @@ $query = "
 			`course[id]` 
 ";
 
+$courseName = '';
 if ($stats = mysqlQuery($query)) {
 	$data = array();
 	while ($row = $stats->fetch_assoc()) {
+		if (empty($courseName)) {
+			$courseName = $row['course[name]'];
+		}
 		$data[$row['course[id]']] = $row['assignments_due_count'] + $row['dateless_assignment_count'];
 	}
 	asort($data);
@@ -42,6 +46,9 @@ if ($stats = mysqlQuery($query)) {
 	$graph->addData($highlight);
 	$graph->setBarColor(GRAPH_DATA_COLOR, GRAPH_HIGHLIGHT_COLOR);
 	$graph->setBarOutline(false);
+	$graph->setLegend(true);
+	$graph->setLegendTitle('Everyone else', $courseName);
+	$graph->setLegendOutlineColor('white');
 	$graph->setGoalLine(averageAssignmentCount(
 		(
 			isset($_REQUEST['department_id'])) ?
