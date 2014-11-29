@@ -38,6 +38,11 @@ $introduction = buildPageSection('
 			content: " \258C";
 			color: ' . GRAPH_HIGHLIGHT_COLOR . ';
 		}
+
+		.data-column:after {
+			content: " \258C";
+			color: ' . GRAPH_DATA_COLOR . ';
+		}
 	</style>
 	
 	<h1>' . $statistic['course[name]'] . '</h1>
@@ -118,6 +123,56 @@ $turnAroundHistory = buildPageSection('
 	'Grading Turn-Around History',
 	'turn-around-history'
 );
+
+$assignmentCreation = buildPageSection('
+	<div class="image-placement">
+		<a
+			data-lightbox="assignment-creation"
+			title="The times of day when assignments are created and modified for &ldquo;' . $statistic['course[name]'] . '.&rdquo;"
+			href="graph/created-modified-histogram.php?course_id=' . $_REQUEST['course_id'] . '"
+		>
+			<img src="graph/created-modified-histogram.php?course_id=' . $_REQUEST['course_id'] . '" width="100%" />
+			<p class="caption">The times of day when assignments are created and modified for &ldquo;' . $statistic['course[name]'] . '.&rdquo;</p>
+		</a>
+	</div>
+	
+	<p class="caption">When are assignments  posted to Canvas for &ldquo;' . $statistic['course[name]'] . '&rdquo;? This histogram represents when during the course of the day, assignments have generally been created or modified for the course. The <span class="highlight-column"></span>' . GRAPH_HIGHLIGHT_COLOR . ' columns represent numbers of assignments created at a given hour during the day, while the <span class="data-column"></span>' . GRAPH_DATA_COLOR . ' columns represent the numbers of assignment edits made at a given hour during the day.</p>
+		
+	<h4>What can be learned from this information?</h4>
+	
+	<ul>
+		<li>Note that the modification times are only the most recent modifications to each assignment (so if many modifications were made to a particular assignment, only the last one would show on the histogram).</li>
+		<li>Are assignments being created during evening study hours (or with good lead time before evening study hours?) If students have a short lead-time on assignments and many assignments are being created during the evening study hours, this could indicate that assignments are not being posted in a timely manner. (A longer average lead-time might suggest that a teacher is using evening study hours to work ahead.)</li>
+		<li>Are assignments being edited frequently during evening study hours? This might suggest incomplete or incorrect assignments are being posted earlier in the day and being edited later. As with assignment creation times, however, it may also indicate a teacher working ahead.</li>
+	</ul>
+	
+	<h3>' . number_format($statistic['average_assignment_lead_time'], 1) . ' days of lead-time</h4>
+	
+		<div class="image-placement">
+			<p class="caption">In &ldquo;' . $statistic['course[name]'] . ',&rdquo; students have, on average, ' . number_format($statistic['average_assignment_lead_time'], 1) . ' days notice between when an assignment is posted and when it is due.</p>
+		</a>
+	</div>
+
+	<h4>What could be this mean?</h4>
+
+	<p>A longer average lead-time suggests a teacher who is giving students more advance notice on assignments than a shorter average lead time. This might be because the teacher with a longer average lead-time is giving more involved assignments that extend over more time for the students. It may also be that the teacher with a shorter lead-time is posting assignments based on progress achieved in class that day.</p>
+	
+	<p>Lead-time should, of course, always be a positive number -- negative average lead-time would mean that many assignments are being posted to Canvas after they are due. There is not clear model for what the ideal lead-time might be, as that shape of assignments varies greatly from discipline to discipline and level to level.</p>
+		
+	<h3>' . $statistic['created_after_due_count'] . ' retroactive assignments</h4>
+	
+		<div class="image-placement">
+			<p class="caption">' . $statistic['created_after_due_count'] . ' assignments have been created <i>after</i> their due dates in &ldquo;' . $statistic['course[name]'] . '.&rdquo;</p>
+		</a>
+	</div>
+
+	<h4>What could be this mean?</h4>
+
+	<p>These are assignments that were entered into Canvas after their due dates, which means that students had no advance notice of the assignments via Canvas. This could mean any number of things: a pop quiz that was entered when it was graded, extra credit on a test that was added during grading as a separate assignment, <a href="http://helpdesk.stmarksschool.org/blog/window-grades-as-snapshots-in-canvas/">a &ldquo;reporting&rdquo; assignment</a> created to update students on a particular grade, or an assignment that was not entered into Canvas until after it was due.</p>
+	<br clear="all" />',
+	'When are assignments posted?',
+	'assignment-creation');
+
 
 $assignmentCount = buildPageSection('
 	<div class="image-placement">
@@ -246,6 +301,6 @@ $questions = buildPageSection('
 	'questions'
 );
 
-displayPage($introduction . $turnAroundComparison . $turnAroundHistory . $assignmentCount . $numbers . $questions);
+displayPage($introduction . $turnAroundComparison . $turnAroundHistory . $assignmentCreation . $assignmentCount . $numbers . $questions);
 
 ?>
