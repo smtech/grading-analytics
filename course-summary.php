@@ -233,7 +233,7 @@ if (strlen($statistic['oldest_ungraded_assignment_url'])) {
 				
 		<h4>What could this mean?</h4>
 		
-		<p>This is the oldest assignment (sorted by due date) for which no student submissions have received a grade. This could mean exactly what it appears to mean. It could be an extra credit (or test corrections) assignment. However, it may also mean that this was a zero-point or ungraded assignment &mdash; that is, an assignment that was <a href="http://stmarks-tech-tips.blogspot.com/2013/10/how-do-i-create-ungraded-assignment.html" target="_blank">never <i>meant</i> to receive a grade</a> &mdash; that was mismarked.</p>';
+		<p>This is the oldest assignment (sorted by due date) for which no student submissions have received a grade. This could mean exactly what it appears to mean. It could be an extra credit (or test corrections) assignment. However, it may also mean that this was a zero-point or ungraded assignment &mdash; that is, an assignment that was <a href="http://helpdesk.stmarksschool.org/blog/how-do-i-create-an-ungraded-assignment/" target="_blank">never <i>meant</i> to receive a grade</a> &mdash; that was mismarked.</p>';
 } else {
 	$numbers .= '<h3>No assignment is ungraded</h3>';
 }
@@ -248,7 +248,7 @@ if (round($statistic['average_submissions_graded']*100, 0) < 100) {
 		
 		<h4>What could this mean?</h4>
 		
-		<p>The quick interpretation of this statistic is that ' . round((1-$statistic['average_submissions_graded'])*100, 0) . '% of assignments still need to be graded in this class. However, this number may also be influenced by extra credit assignments (for which not all students submitted work) or by the presence of the <a target="_blank" href="https://stmarksschool.instructure.com/courses/489/wiki/who-is-this-test-student">Test Student</a> in the class (who may or may not have turned in work or been graded... and it doesn&rsquo;t particularly matter). This percentage could also be dragged down by zero-point assignments that were <a href="http://stmarks-tech-tips.blogspot.com/2013/10/how-do-i-create-ungraded-assignment.html" target="_blank">never meant to be graded</a>, but are not formally marked as ungraded (and therefore appear in the gradebook).</p>';
+		<p>The quick interpretation of this statistic is that ' . round((1-$statistic['average_submissions_graded'])*100, 0) . '% of assignments still need to be graded in this class. However, this number may also be influenced by extra credit assignments (for which not all students submitted work) or by the presence of the <a target="_blank" href="https://stmarksschool.instructure.com/courses/489/wiki/who-is-this-test-student">Test Student</a> in the class (who may or may not have turned in work or been graded... and it doesn&rsquo;t particularly matter). This percentage could also be dragged down by zero-point assignments that were <a href="http://helpdesk.stmarksschool.org/blog/how-do-i-create-an-ungraded-assignment/" target="_blank">never meant to be graded</a>, but are not formally marked as ungraded (and therefore appear in the gradebook).</p>';
 } else {
 	$numbers .= '<h3>100% of submissions graded</h3>';
 }
@@ -263,7 +263,7 @@ if ($statistic['zero_point_assignment_count'] > 0) {
 		
 		<h4>What could this mean?</h4>
 		
-		<p>Zero-point assignments are often (but not <i>always</i>) assignments that were never meant to receive a grade: reading, practice, etc. In this case, the teacher could <a href="http://stmarks-tech-tips.blogspot.com/2013/10/how-do-i-create-ungraded-assignment.html" target="_blank">remove this unnecessary column from the gradebook</a> while still preserving it as a to-do item for their students. However, these may also be assignments for which a value has not yet been determined. It may be worth considering if this could be useful information to support student planning.</p>';
+		<p>Zero-point assignments are often (but not <i>always</i>) assignments that were never meant to receive a grade: reading, practice, etc. In this case, the teacher could <a href="http://helpdesk.stmarksschool.org/blog/how-do-i-create-an-ungraded-assignment/" target="_blank">remove this unnecessary column from the gradebook</a> while still preserving it as a to-do item for their students. However, these may also be assignments for which a value has not yet been determined. It may be worth considering if this could be useful information to support student planning.</p>';
 } else {
 	$numbers .= '<h3>No zero-point assignments</h3>';
 }
