@@ -25,7 +25,7 @@ define('VALUE_ENABLE_REGEXP_FILTER', 'enable_filter');
 define('WARNING_SYNC', '<em>Warning:</em> The sync will not overwrite existing events in Canvas (so: no merge). <em>Only</em> changes made in the original ICS calendar feed will be synced. Changes made in Canvas will be ignored (and, if the event is changed in the calendar feed subsequently, overwritten). <em>Only</em> additions made in the calendar feed will be synced. Additions made in Canvas will not be part of the sync (and will never be affected by the sync). <em>Only</em> deletions made in the calendar feed will be synced. Deletions made in Canvas will be ignored (and, if the event is subsequently changed in the calendar feed, it will be resynced to Canvas).
 ');
 
-define('WARNING_REGEXP_FILTER', '<em>Note:</em> The regular expression match is applied to the <em>title</em> of an event <em>only,</em> and the event must both match the include regular expression <em>and</em> not match the exclude regular expression to be included.');
+define('WARNING_REGEXP_FILTER', '<em>Note:</em> The regular expression match is applied to the <em>title</em> of an event <em>only</em>, and the event must both match the include regular expression <em>and</em> not match the exclude regular expression to be included. Note also that the regular expressions are <em>case-sensitive</em>.');
 
 require_once(__DIR__ . '/common.inc.php');
 
@@ -82,16 +82,21 @@ function getCanvasContext($canvasUrl) {
 function filterEvent($event, $calendarCache) {
 	/* strip HTML tags from the event title */
 	$event['event_text'] = strip_tags($event['event_text']);
-	
-	$include = null;
-	$exclude = null;
-	
-	preg_match("%{$calendarCache['include_regexp']}%", $event['event_text'], $include);
-	preg_match("%{$calendarCache['exclude_regexp']}%", $event['event_text'], $exclude);
+				
  	if (
-		$calendarCache['enable_regexp_filter'] == 0 ||
-		(
-			count($include) > 0 && count($exclude) == 0
+	 	// include this event if filtering is off...
+ 		$calendarCache['enable_regexp_filter'] == false ||
+ 		(
+			(
+				( // if filtering is on, and there's an include pattern test that pattern...
+					strlen($calendarCache['include_regexp']) > 0 &&
+					preg_match("%{$calendarCache['include_regexp']}%", $event['event_text'])
+				)
+			) &&
+			!( // if there is an exclude pattern, make sure that this event is NOT excluded
+				strlen($calendarCache['exclude_regexp']) > 0 &&
+				preg_match("%{$calendarCache['exclude_regexp']}%", $event['event_text'])
+			)
 		)
 	) {
 		// TODO: it would be even more elegant to allow regexp reformatting of titles...
@@ -103,6 +108,7 @@ function filterEvent($event, $calendarCache) {
 	
 		return $event;
 	}
+
 	return false;
 }
 
@@ -137,7 +143,11 @@ if (isset($_REQUEST['cal']) && isset($_REQUEST['canvas_url'])) {
 			require_once(BASE . 'functions/date_functions.php');
 			require_once(BASE . 'functions/init.inc.php');
 			require_once(BASE . 'functions/ical_parser.php');
-			displayError($master_array, false, null, null, DEBUGGING_GENERAL);
+			displayError(
+				$master_array,
+				false, null, null,
+				DEBUGGING_GENERAL
+			);
 		
 			/* log this pairing in the database cache, if it doesn't already exist */
 			$calendarCacheResponse = mysqlQuery("
@@ -172,7 +182,7 @@ if (isset($_REQUEST['cal']) && isset($_REQUEST['canvas_url'])) {
 						)
 						VALUES (
 							'$pairingHash',
-							'{$master_array['calendar_name']}',
+							'" . addslashes($master_array['calendar_name']) . "',
 							'{$_REQUEST['cal']}',
 							'{$canvasContext['canonical_url']}',
 							'" . getSyncTimestamp() . "',

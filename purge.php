@@ -27,6 +27,8 @@ do {
 			)
 		);
 	}
-} while($events = $eventsApi->nextPage())
+} while($events = $eventsApi->nextPage());
+
+echo('Calendar purged.');
 
 ?>

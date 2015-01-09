@@ -14,7 +14,7 @@ define('DEBUGGING_ALL', DEBUGGING_GENERAL |
 						DEBUGGING_CANVAS_API |
 						DEBUGGING_MYSQL);
 						
-define('DEBUGGING_DEFAULT', DEBUGGING_GENERAL);
+define('DEBUGGING_DEFAULT', DEBUGGING_NONE);
 
 /**
  * Helper function to conditionally fill the log file with notes!
