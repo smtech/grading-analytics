@@ -44,7 +44,7 @@ function stmarks_addGradingAnalyticsButton(courseSecondary) {
 		var gradingAnalyticsButton = document.createElement('a');
 		gradingAnalyticsButton.target = '_blank';
 		gradingAnalyticsButton.href = '<?= APP_URL ?>/course-summary.php?course_id=' + courseId;
-		gradingAnalyticsButton.className = 'button-sidebar-wide';
+		gradingAnalyticsButton.className = 'btn button-sidebar-wide';
 		gradingAnalyticsButton.innerHTML = '<i class="icon-analytics"></i> View Grading Analytics';
 		courseAnalyticsButton.parentElement.appendChild(gradingAnalyticsButton);
 	}
