@@ -38,7 +38,7 @@ while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statisti
 		<tr>
 			<td>" . $timestamp->format('F j, Y') . "</td>
 			<td>" . implode(", ",unserialize($statistic['teacher[sortable_name]s'])) . "</td>
-			<td><a target=\"_blank\" href=\"http://canvas.stmarksschool.org/courses/{$statistic['course[id]']}\">" . $statistic['course[name]'] . "</a></td>
+			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . $statistic['course[name]'] . "</a></td>
 			<td>" . $statistic['student_count'] . "</td>
 			<td>" . round($statistic['average_assignment_lead_time'], 1) . " days</td>
 			<td>" . round($statistic['average_grading_turn_around'], 1) . " days</td>
