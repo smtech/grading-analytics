@@ -52,4 +52,5 @@ function stmarks_addGradingAnalyticsButton(courseSecondary) {
 
 function stmarks_gradingAnalytics() {
 	stmarks_waitForDOMById(/courses\/\d+/, 'course_show_secondary', stmarks_addGradingAnalyticsButton);
+	stmarks_waitForDOMById(/accounts\/\d+/, 'statistics', stmarks_addGradingAnalyticsSnapshotButton);
 }
