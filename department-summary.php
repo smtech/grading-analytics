@@ -40,16 +40,16 @@ while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statisti
 			<td>" . implode(", ",unserialize($statistic['teacher[sortable_name]s'])) . "</td>
 			<td><a target=\"_blank\" href=\"http://canvas.stmarksschool.org/courses/{$statistic['course[id]']}\">" . $statistic['course[name]'] . "</a></td>
 			<td>" . $statistic['student_count'] . "</td>
+			<td>" . round($statistic['average_assignment_lead_time'], 1) . " days</td>
+			<td>" . round($statistic['average_grading_turn_around'], 1) . " days</td>
+			<td>" . round($statistic['average_submissions_graded']*100) . "%</td>
 			<td>" . $statistic['assignments_due_count'] . "</td>
 			<td>" . $statistic['dateless_assignment_count'] . "</td>
-			<td>" . round($statistic['average_assignment_lead_time'], 1) . " days</td>
 			<td>" . $statistic['created_after_due_count'] . "</td>
 			<td>" . $statistic['gradeable_assignment_count'] . "</td>
 			<td>" . $statistic['graded_assignment_count'] . "</td>
 			<td>" . (strlen($statistic['oldest_ungraded_assignment_name']) > 0 ? "<a href=\"{$statistic['oldest_ungraded_assignment_url']}\">{$statistic['oldest_ungraded_assignment_name']}</a> (due " . $oldestDueDate->format('F j, Y') . ")" : "-") . "</td>
-			<td>" . round($statistic['average_grading_turn_around'], 1) . " days</td>
 			<td>" . $statistic['zero_point_assignment_count'] . "</td>
-			<td>" . round($statistic['average_submissions_graded']*100) . "%</td>
 			<td><a target=\"_blank\" href=\"{$statistic['gradebook_url']}\">Gradebook</a></td>
 			<td><a target=\"_blank\" href=\"{$statistic['analytics_page']}\">Grading Analytics</a></td>
 		";
@@ -63,16 +63,16 @@ displayPage("
 			<th>Teacher(s)</th>
 			<th>Course</th>
 			<th>Students</th>
+			<th>Average Grading Turn-Around</th>
+			<th>Average Assignment Lead Time</th>
+			<th>Average Submissions Graded per Assignment</th>
 			<th>Assignments Due</th>
 			<th>Assignments without Due Dates</th>
-			<th>Average Assignment Lead Time</th>
 			<th>Retroactive Assignments</th>
 			<th>Gradeable Assignments</th>
 			<th>Graded Assignments</th>
 			<th>Oldest Ungraded Assignment</th>
-			<th>Average Grading Turn-Around</th>
 			<th>Zero-Point Assignments</th>
-			<th>Average Submissions Graded per Assignment</th>
 			<th colspan=\"2\">Course Links</th>
 		</tr>
 " . $snapshot . "

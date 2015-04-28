@@ -50,7 +50,18 @@ function stmarks_addGradingAnalyticsButton(courseSecondary) {
 	}
 }
 
+function stmarks_addGradingAnalyticsSnapshotButton(statistics) {
+	var courseAnalyticsButton = null;
+	var leftSidebar = document.getElementById('section-tabs');
+	var departmentUrl = /.*\/accounts\/(\d+).*/;
+	var departmentId = document.location.href.match(departmentUrl)[1];
+	var gradingSnapshotButton = document.createElement('li');
+	gradingSnapshotButton.className = 'section';
+	gradingSnapshotButton.innerHTML = '<a target="_blank" href="<?= APP_URL ?>/department-summary.php?department_id=' + departmentId + '">Grading Analytics Snapshot</a>';
+	leftSidebar.appendChild(gradingSnapshotButton);
+}
+
 function stmarks_gradingAnalytics() {
 	stmarks_waitForDOMById(/courses\/\d+/, 'course_show_secondary', stmarks_addGradingAnalyticsButton);
-	stmarks_waitForDOMById(/accounts\/\d+/, 'statistics', stmarks_addGradingAnalyticsSnapshotButton);
+	stmarks_waitForDOMByClassName(/accounts\/\d+/, 'statistics', stmarks_addGradingAnalyticsSnapshotButton);
 }
