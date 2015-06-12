@@ -24,6 +24,94 @@ $statistics = mysqlQuery("
 			`course[name]` ASC
 ");
 
+class Level {
+	public static $GREATER_THAN = 0;
+	public static $GREATER_THAN_OR_EQUAL = 1;
+	public static $LESS_THAN_OR_EQUAL = 2;
+	public static $LESS_THAN = 3;
+	
+	public $level;
+	public $value;
+	public $comparison;
+	
+	public function __construct($level, $value, $comparison) {
+		$this->level = $level;
+		$this->value = $value;
+		$this->comparison = $comparison;
+	}
+}
+
+$levels = array(
+	'average_grading_turn_around' => array(
+		'warning' => array(
+			new Level(3, 14, Level::$GREATER_THAN),
+			new Level(2, 7, Level::$GREATER_THAN)
+		),
+		'highlight' => array(
+			new Level (3, 3, Level::$LESS_THAN),
+			new Level (2, 7, Level::$LESS_THAN)
+		)
+	),
+	'average_assignment_lead_time' => array(
+		'warning' => array(
+			new Level(3, 1, Level::$LESS_THAN),
+			new Level(2, 2, Level::$LESS_THAN)
+		),
+		'highlight' => array(
+			new Level(3, 10, Level::$GREATER_THAN),
+			new Level(2, 7, Level::$GREATER_THAN)
+		)
+	),
+	'dateless_assignment_count' => array(
+		'warning' => array(
+			new Level(3, 20, Level::$GREATER_THAN),
+			new Level(2, 10, Level::$GREATER_THAN)
+		),
+		'highlight' => array(
+			new Level(3, 1, Level::$LESS_THAN),
+			new Level(2, 5, Level::$LESS_THAN)
+		)
+	),
+	'created_after_due_count' => array(
+		'warning' => array(
+			new Level(3, 10, Level::$GREATER_THAN),
+			new Level(2, 5, Level::$GREATER_THAN)
+		),
+		'highlight' => array(
+			new Level(3, 1, Level::$LESS_THAN),
+			new Level(2, 5, Level::$LESS_THAN)
+		)
+	)
+);
+
+function getLevel($key, $value) {
+	global $levels;
+	foreach ($levels[$key] as $mode => $modeLevels)
+	{
+		foreach ($modeLevels as $level) {
+			$match = false;
+			switch ($level->comparison) {
+				case Level::$GREATER_THAN:
+					$match = $value > $level->value;
+					break;
+				case Level::$GREATER_THAN_OR_EQUAL:
+					$match = $value >= $level->value;
+					break;
+				case Level::$LESS_THAN:
+					$match = $value < $level->value;
+					break;
+				case Level::$LESS_THAN_OR_EQUAL:
+					$match = $value <= $level->value;
+					break;
+			}
+			if ($match) {
+				return " class=\"$mode level-{$level->level}\"";
+			}
+		}
+	}
+	return "";
+}
+
 $snapshot = "";
 $firstCourseId = false;
 while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statistic['course[id]'])) {
@@ -36,30 +124,68 @@ while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statisti
 
 	$snapshot .= "
 		<tr>
-			<td>" . $timestamp->format('F j, Y') . "</td>
-			<td>" . implode(", ",unserialize($statistic['teacher[sortable_name]s'])) . "</td>
+			<td>" . implode(", ",array_unique(unserialize($statistic['teacher[sortable_name]s']))) . "</td>
 			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . $statistic['course[name]'] . "</a></td>
 			<td>" . $statistic['student_count'] . "</td>
-			<td>" . round($statistic['average_assignment_lead_time'], 1) . " days</td>
-			<td>" . round($statistic['average_grading_turn_around'], 1) . " days</td>
+			<td><span" . getLevel('average_grading_turn_around', $statistic['average_grading_turn_around']) . ">" . round($statistic['average_grading_turn_around'], 1) . " days</span></td>
+			<td><span" . getLevel('average_assignment_lead_time', round($statistic['average_assignment_lead_time'])) . ">" . round($statistic['average_assignment_lead_time'], 1) . " days</span></td>
 			<td>" . round($statistic['average_submissions_graded']*100) . "%</td>
 			<td>" . $statistic['assignments_due_count'] . "</td>
-			<td>" . $statistic['dateless_assignment_count'] . "</td>
-			<td>" . $statistic['created_after_due_count'] . "</td>
+			<td><span" . getLevel('dateless_assignment_count', round($statistic['dateless_assignment_count'], 1)) . ">" . $statistic['dateless_assignment_count'] . "</span></td>
+			<td><span" . getLevel('created_after_due_count', $statistic['created_after_due_count']) . ">" . $statistic['created_after_due_count'] . "</span></td>
 			<td>" . $statistic['gradeable_assignment_count'] . "</td>
 			<td>" . $statistic['graded_assignment_count'] . "</td>
-			<td>" . (strlen($statistic['oldest_ungraded_assignment_name']) > 0 ? "<a href=\"{$statistic['oldest_ungraded_assignment_url']}\">{$statistic['oldest_ungraded_assignment_name']}</a> (due " . $oldestDueDate->format('F j, Y') . ")" : "-") . "</td>
+			<td>" . (strlen($statistic['oldest_ungraded_assignment_name']) > 0 ? "<a href=\"{$statistic['oldest_ungraded_assignment_url']}\">{$statistic['oldest_ungraded_assignment_name']}</a><br />(due " . $oldestDueDate->format('F j, Y') . ")" : "-") . "</td>
 			<td>" . $statistic['zero_point_assignment_count'] . "</td>
 			<td><a target=\"_blank\" href=\"{$statistic['gradebook_url']}\">Gradebook</a></td>
-			<td><a target=\"_blank\" href=\"{$statistic['analytics_page']}\">Grading Analytics</a></td>
+			<td><a target=\"_blank\" href=\"{$statistic['analytics_page']}\">Grading<br />Analytics</a></td>
 		";
 }
 displayPage("
+	<style type=\"text/css\">
+		table {
+			border-spacing: 0px 3px;
+			border-collapse: collapse;
+		}
+	
+		td {
+			padding: .5em;
+			white-space: nowrap;
+		}
+		
+		.warning, .highlight {
+			font-weight: bold;
+			border-radius: 8px;
+			padding: .25em .5em;
+			white-space: nowrap;
+		}
+		
+		.highlight.level-3 {
+			background-color: #bbffbb;
+			color: #006600;
+		}
+		
+		.highlight.level-2 {
+			background-color: #eeffee;
+			color: #003300;
+		}
+		
+		.warning.level-2 {
+			background-color: #ffeebb;
+			color: #665500;
+		}
+		
+		.warning.level-3 {
+			background-color: #ffbbbb;
+			color: #990000;
+		}
+	</style>
+
 	<h1>{$departments['name']} Daily Snapshot</h1>
+	<p>" . $timestamp->format('F j, Y') . "</p>
 	
 	<table class=\"striped\">
 		<tr>
-			<th>Timestamp</th>
 			<th>Teacher(s)</th>
 			<th>Course</th>
 			<th>Students</th>
