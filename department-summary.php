@@ -124,8 +124,8 @@ while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statisti
 
 	$snapshot .= "
 		<tr>
-			<td>" . implode(", ",array_unique(unserialize($statistic['teacher[sortable_name]s']))) . "</td>
-			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . $statistic['course[name]'] . "</a></td>
+			<td>" . implode("<br />",array_unique(unserialize($statistic['teacher[sortable_name]s']))) . "</td>
+			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . implode("<br />", explode(": ",$statistic['course[name]'])) . "</a></td>
 			<td>" . $statistic['student_count'] . "</td>
 			<td><span" . getLevel('average_grading_turn_around', $statistic['average_grading_turn_around']) . ">" . round($statistic['average_grading_turn_around'], 1) . " days</span></td>
 			<td><span" . getLevel('average_assignment_lead_time', round($statistic['average_assignment_lead_time'])) . ">" . round($statistic['average_assignment_lead_time'], 1) . " days</span></td>
@@ -148,8 +148,15 @@ displayPage("
 			border-collapse: collapse;
 		}
 	
-		td {
+		th, td {
 			padding: .5em;
+		}
+		
+		th {
+			font-size: smaller;
+		}
+	
+		td {
 			white-space: nowrap;
 		}
 		
@@ -189,15 +196,15 @@ displayPage("
 			<th>Teacher(s)</th>
 			<th>Course</th>
 			<th>Students</th>
-			<th>Average Grading Turn-Around</th>
-			<th>Average Assignment Lead Time</th>
-			<th>Average Submissions Graded per Assignment</th>
-			<th>Assignments Due</th>
-			<th>Assignments without Due Dates</th>
+			<th>Turn-Around</th>
+			<th>Lead Time</th>
+			<th>Graded</th>
+			<th>Due</th>
+			<th>No Due Dates</th>
 			<th>Retroactive Assignments</th>
 			<th>Gradeable Assignments</th>
 			<th>Graded Assignments</th>
-			<th>Oldest Ungraded Assignment</th>
+			<th>Oldest Ungraded</th>
 			<th>Zero-Point Assignments</th>
 			<th colspan=\"2\">Course Links</th>
 		</tr>
