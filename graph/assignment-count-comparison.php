@@ -27,7 +27,7 @@ $courseName = '';
 if ($stats = mysqlQuery($query)) {
 	$data = array();
 	while ($row = $stats->fetch_assoc()) {
-		if (empty($courseName)) {
+		if ($row['course[id]'] == $_REQUEST['course_id']) {
 			$courseName = $row['course[name]'];
 		}
 		$data[$row['course[id]']] = $row['assignments_due_count'] + $row['dateless_assignment_count'];
