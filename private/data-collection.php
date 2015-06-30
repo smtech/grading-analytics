@@ -121,13 +121,18 @@ function collectStatistics($term) {
 								
 								// check for due dates
 								$dueDate = new DateTime($assignment['due_at']);
+								$dueDate->setTimeZone(new DateTimeZone(SCHOOL_TIME_ZONE));
 								if (($timestamp - $dueDate->getTimestamp()) > 0) {
 									$statistic['assignments_due_count']++;
 									
 									// update created_modified_histogram
-									$createdModifiedHistogram[HISTOGRAM_CREATED][date("g:00 a", strtotime($assignment['created_at']))]++;
-									if ($assignment['updated_at'] != $assignment['created_at']) {
-										$createdModifiedHistogram[HISTOGRAM_MODIFIED][date("g:00 a", strtotime($assignment['updated_at']))]++;
+									$createdAt = new DateTime($assignment['created_at']);
+									$createdAt->setTimeZone(new DateTimeZone(SCHOOL_TIME_ZONE));
+									$updatedAt = new DateTime($assignment['updated_at']);
+									$updatedAt->setTimeZone(new DateTimeZone(SCHOOL_TIME_ZONE));
+									$createdModifiedHistogram[HISTOGRAM_CREATED][$createdAt->format('g:00 a')]++;
+									if ($createdAt != $updatedAt) {
+										$createdModifiedHistogram[HISTOGRAM_MODIFIED][$updatedAt->format('g:00 a')]++;
 									}
 									
 									// tally lead time on the assignment

@@ -8,6 +8,8 @@ if (!defined('TOOL_START_PAGE')) {
 	define('TOOL_START_PAGE', 'index.php');
 }
 
+define('SCHOOL_TIME_ZONE', 'America/New_York'); // Go Sox! Stupid PHP.
+
 define('DATA_COLLECTION_CRONTAB', '0 0 * * *'); // collect data every night at midnight
 
 /* graph coloring (tied into CSS styling of summary text, so be sure to use
