@@ -126,7 +126,9 @@ function collectStatistics($term) {
 									
 									// update created_modified_histogram
 									$createdModifiedHistogram[HISTOGRAM_CREATED][date("g:00 a", strtotime($assignment['created_at']))]++;
-									$createdModifiedHistogram[HISTOGRAM_MODIFIED][date("g:00 a", strtotime($assignment['due_at']))]++;
+									if ($assignment['updated_at'] != $assignment['created_at']) {
+										$createdModifiedHistogram[HISTOGRAM_MODIFIED][date("g:00 a", strtotime($assignment['updated_at']))]++;
+									}
 									
 									// tally lead time on the assignment
 									$leadTimeTally += strtotime($assignment['due_at']) - strtotime($assignment['created_at']);
