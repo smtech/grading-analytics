@@ -263,7 +263,7 @@ if ($statistic['zero_point_assignment_count'] > 0) {
 		
 		<h4>What could this mean?</h4>
 		
-		<p>Zero-point assignments are often (but not <i>always</i>) assignments that were never meant to receive a grade: reading, practice, etc. In this case, the teacher could <a href="http://helpdesk.stmarksschool.org/blog/how-do-i-create-an-ungraded-assignment/" target="_blank">remove this unnecessary column from the gradebook</a> while still preserving it as a to-do item for their students. However, these may also be assignments for which a value has not yet been determined. It may be worth considering if this could be useful information to support student planning.</p>';
+		<p>Zero-point assignments are often (but not <i>always</i>) assignments that were never meant to receive a grade: reading, practice, etc. In this case, the teacher could <a href="http://helpdesk.stmarksschool.org/blog/how-do-i-create-an-ungraded-assignment/" target="_blank">remove this unnecessary column from the gradebook</a> while still preserving it as a to-do item for their students. However, these may also be assignments for which a value has not yet been determined or may represent extra credit assignments or test corrections. It may be worth considering if this could be useful information to support student planning.</p>';
 } else {
 	$numbers .= '<h3>No zero-point assignments</h3>';
 }
