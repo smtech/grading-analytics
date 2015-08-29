@@ -1,0 +1,19 @@
+{
+    "name": "smtech/canvas-grading-analytics",
+    "description": "Track and present rich feedback on faculty behavior in Canvas (akin to the course analytics data on on students)",
+    "require": {
+        "smtech/canvaspest": "~1.0",
+        "smtech/stmarkssmarty": "dev-master",
+        "battis/autocrontabjob": "~1.0",
+        "elliottb/phpgraphlib": "dev-master",
+        "pear/log": "~1.0"
+    },
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "sethbattis@stmarksschool.org"
+        }
+    ],
+    "minimum-stability": "dev"
+}

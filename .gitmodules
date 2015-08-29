@@ -1,4 +1,0 @@
-[submodule "smcanvaslib"]
-	path = smcanvaslib
-	url = git@github.com:smtech/smcanvaslib.git
-	fetchRecurseSubmodules = true
