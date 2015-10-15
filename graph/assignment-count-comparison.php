@@ -7,17 +7,21 @@ require_once(__DIR__ . '/../.ignore.grading-analytics-authentication.inc.php');
 require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
 require_once(SMCANVASLIB_PATH . '/include/phpgraphlib/phpgraphlib.php');
 
+$query = "SELECT * FROM `course_statistics` WHERE `course[id]` = '" . $_REQUEST['course_id'] . "' LIMIT 1";
+$response = mysqlQuery($query);
+$course = $response->fetch_assoc();
+$timestamp = preg_replace('/^(.*)T.*$/', '$1', $course['timestamp']);
+
 $query = "
 	SELECT * FROM (
-		SELECT * FROM `course_statistics`" .
+		SELECT * FROM `course_statistics`
+					WHERE
+		" .
 			(
 				isset($_REQUEST['department_id']) ? "
-					WHERE
-						`course[account_id]` = '{$_REQUEST['department_id']}'" :
+						`course[account_id]` = '{$_REQUEST['department_id']}' AND " :
 					''
-			) . "
-			ORDER BY
-				`timestamp` DESC
+			) . "		`timestamp` LIKE '$timestamp%'
 	) AS `stats`
 		GROUP BY
 			`course[id]` 

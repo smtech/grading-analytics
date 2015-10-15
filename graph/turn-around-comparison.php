@@ -7,22 +7,24 @@ require_once(__DIR__ . '/../.ignore.grading-analytics-authentication.inc.php');
 require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
 require_once(SMCANVASLIB_PATH . '/include/phpgraphlib/phpgraphlib.php');
 
+$query = "SELECT * FROM `course_statistics` WHERE `course[id]` = '" . $_REQUEST['course_id'] . "' ORDER BY `timestamp` DESC LIMIT 1";
+$response = mysqlQuery($query);
+$course = $response->fetch_assoc();
+$timestamp = preg_replace('/^(.*)T.*$/', '$1', $course['timestamp']);
+
 $query = "
-	SELECT * FROM (
-		SELECT * FROM `course_statistics`
-			WHERE
-				`average_grading_turn_around` > 0" .
-				(
-					isset($_REQUEST['department_id']) ? "
-					AND `course[account_id]` = '{$_REQUEST['department_id']}'
-					" :
-					''
-				) . "
-			ORDER BY
-				`timestamp` DESC
-	) AS `stats`
-		GROUP BY
-		`course[id]`
+	SELECT * FROM `course_statistics`
+		WHERE
+			`average_grading_turn_around` > 0 AND
+			`timestamp` LIKE '$timestamp%' " .
+			(
+				isset($_REQUEST['department_id']) ? "
+				AND `course[account_id]` = '{$_REQUEST['department_id']}'
+				" :
+				''
+			) . "
+		ORDER BY
+			`average_grading_turn_around` ASC
 ";
 
 if ($stats = mysqlQuery($query)) {
