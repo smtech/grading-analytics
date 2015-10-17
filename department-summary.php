@@ -62,6 +62,16 @@ $levels = array(
 			new Level(2, 7, Level::$GREATER_THAN)
 		)
 	),
+	'average_submissions_graded' => array(
+		'warning' => array(
+			new Level(3, 0.5, Level::$LESS_THAN),
+			new Level(2, 0.75, Level::$LESS_THAN)
+		),
+		'highlight' => array(
+			new Level(3, 1.0, Level::$GREATER_THAN_OR_EQUAL),
+			new Level(2, 0.9, Level::$GREATER_THAN)
+		)
+	),
 	'dateless_assignment_count' => array(
 		'warning' => array(
 			new Level(3, 20, Level::$GREATER_THAN),
@@ -90,6 +100,12 @@ $levels = array(
 		'highlight' => array(
 			new Level(3, 1, Level::$LESS_THAN),
 			new Level(2, 5, Level::$LESS_THAN)
+		)
+	),
+	'zero_point_assignment_count' => array(
+		'warning' => array(
+			new Level(3, 10, Level::$GREATER_THAN_OR_EQUAL),
+			new Level(2, 0, Level::$GREATER_THAN)
 		)
 	)
 );
@@ -137,16 +153,16 @@ while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statisti
 			<td>" . implode("<br />",array_unique(unserialize($statistic['teacher[sortable_name]s']))) . "</td>
 			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . implode("<br />", explode(": ",$statistic['course[name]'])) . "</a></td>
 			<td>" . $statistic['student_count'] . "</td>
-			<td><span" . ($statistic['graded_assignment_count'] > 0 ? getLevel('average_grading_turn_around', $statistic['average_grading_turn_around']) : " class=\"warning level-3\"") . ">" . ($statistic['graded_assignment_count'] > 0 ? round($statistic['average_grading_turn_around'] . " days", 1) : 'No grades'). "</span></td>
+			<td><span" . ($statistic['graded_assignment_count'] > 0 ? getLevel('average_grading_turn_around', $statistic['average_grading_turn_around']) : " class=\"warning level-3\"") . ">" . ($statistic['graded_assignment_count'] > 0 ? round($statistic['average_grading_turn_around'], 1) . " days" : 'No grades'). "</span></td>
 			<td><span" . getLevel('average_assignment_lead_time', round($statistic['average_assignment_lead_time'])) . ">" . round($statistic['average_assignment_lead_time'], 1) . " days</span></td>
-			<td>" . round($statistic['average_submissions_graded']*100) . "%</td>
+			<td><span" . getLevel('average_submissions_graded', $statistic['average_submissions_graded']) . ">" . round($statistic['average_submissions_graded']*100) . "%</span></td>
 			<td>" . $statistic['assignments_due_count'] . "</td>
 			<td><span" . getLevel('dateless_assignment_count', round($statistic['dateless_assignment_count'], 1)) . ">" . $statistic['dateless_assignment_count'] . "</span></td>
 			<td><span" . getLevel('created_after_due_count', $statistic['created_after_due_count']) . ">" . $statistic['created_after_due_count'] . "</span></td>
 			<td><span" . getLevel('gradeable_assignment_count', $statistic['gradeable_assignment_count']) . ">" . $statistic['gradeable_assignment_count'] .  "</span></td>
 			<td><span" . getLevel('graded_assignment_count', $statistic['graded_assignment_count']) . ">" . $statistic['graded_assignment_count'] .  "</span></td>
 			<td>" . (strlen($statistic['oldest_ungraded_assignment_name']) > 0 ? "<a href=\"{$statistic['oldest_ungraded_assignment_url']}\">{$statistic['oldest_ungraded_assignment_name']}</a><br />(due " . $oldestDueDate->format('F j, Y') . ")" : "-") . "</td>
-			<td>" . $statistic['zero_point_assignment_count'] . "</td>
+			<td><span" . getLevel('zero_point_assignment_count', $statistic['zero_point_assignment_count']) . ">" . $statistic['zero_point_assignment_count'] . "</span></td>
 			<td><a target=\"_blank\" href=\"{$statistic['gradebook_url']}\">Gradebook</a></td>
 			<td><a target=\"_blank\" href=\"{$statistic['analytics_page']}\">Grading<br />Analytics</a></td>
 		";
