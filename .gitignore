@@ -1,5 +1,15 @@
-# Files full of secrets
-.ignore.*
+# authentication credentials
+.htpasswd
+secrets.xml
 
-# Dynamically-generated
+# dynamically-loaded and/or caches
+/logs/*.log
 /vendor/
+/smarty/cache/*
+!/smarty/cache/README.md
+/smarty/templates_c/*
+!/smarty/templates_c/README.md
+/admin/.htaccess
+
+# file system
+.DS_*

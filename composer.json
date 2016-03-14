@@ -1,19 +1,48 @@
 {
     "name": "smtech/canvas-grading-analytics",
     "description": "Track and present rich feedback on faculty behavior in Canvas (akin to the course analytics data on on students)",
-    "require": {
-        "smtech/canvaspest": "~1.0",
-        "smtech/stmarkssmarty": "dev-master",
+	"license": "GPL-3.0",
+	"config": {
+		"secure-http": false
+	},
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "spvsoftwareproducts/LTI_Tool_Provider",
+				"version": "2.5.00",
+				"dist": {
+					"url": "http://projects.oscelot.org/gf/download/frsrelease/924/5882/LTI_Tool_Provider-2.5.00.zip",
+					"type": "zip"
+				},
+				"license": "LGPL-3.0",
+				"authors": [
+					{
+						"name": "Stephen Vickers"
+					}   
+				],
+				"homepage": "http://spvsoftwareproducts.com/php/lti_tool_provider/"
+			}
+		}
+	],
+	"require": {
+		"smtech/stmarkssmarty": "dev-master",
+		"smtech/canvaspest": "~1.0",
+		"smtech/oauth-negotiator": "~1.0",
+		"battis/appmetadata": "~1.0",
+		"spvsoftwareproducts/LTI_Tool_Provider": "~2.5",
         "battis/autocrontabjob": "~1.0",
         "elliottb/phpgraphlib": "dev-master",
-        "pear/log": "~1.0"
-    },
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Seth Battis",
-            "email": "sethbattis@stmarksschool.org"
-        }
-    ],
-    "minimum-stability": "dev"
+		"pear/log": "~1.12"
+	},
+	"autoload": {
+		"classmap": [""]
+	},
+	"authors": [
+		{
+			"name": "Seth Battis",
+			"email": "sethbattis@stmarksschool.org"
+		}
+	],
+	"minimum-stability": "dev"
 }

@@ -4,8 +4,42 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "527dcaefeecaa931bcdefa411eb13ece",
+    "hash": "bc4e66d3f11498e901a70ce873efcf90",
+    "content-hash": "4135b20a5824cd13245099e59e70f13e",
     "packages": [
+        {
+            "name": "battis/appmetadata",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/appmetadata.git",
+                "reference": "a97bdc20627008ed165b638737b618a0d6f606c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/appmetadata/zipball/a97bdc20627008ed165b638737b618a0d6f606c2",
+                "reference": "a97bdc20627008ed165b638737b618a0d6f606c2",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "An object to store app metadata backed by a MySQL table",
+            "time": "2015-10-22 20:25:29"
+        },
         {
             "name": "battis/autocrontabjob",
             "version": "v1.0",
@@ -44,17 +78,57 @@
             "time": "2015-08-11 17:57:29"
         },
         {
+            "name": "battis/bootstrapsmarty",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/bootstrapsmarty.git",
+                "reference": "154e80cfac8f0aae07d47998a13f2669424d59b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/bootstrapsmarty/zipball/154e80cfac8f0aae07d47998a13f2669424d59b9",
+                "reference": "154e80cfac8f0aae07d47998a13f2669424d59b9",
+                "shasum": ""
+            },
+            "require": {
+                "battis/data-utilities": "dev-master",
+                "smarty/smarty": "3.1.*"
+            },
+            "suggest": {
+                "eternicode/bootstrap-datepicker": "The full Bootstrap Datepicker package for local install"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\BootstrapSmarty\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "A wrapper for Smarty to set (and maintain) defaults within a Bootstrap UI environment",
+            "time": "2016-03-14 19:27:42"
+        },
+        {
             "name": "battis/data-utilities",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/data-utilities.git",
-                "reference": "14f3d457ebc7b661c4c42596d0567dc85bab9e2a"
+                "reference": "2675320d7b9099c0689a6db9e2262ea70d40742f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/data-utilities/zipball/14f3d457ebc7b661c4c42596d0567dc85bab9e2a",
-                "reference": "14f3d457ebc7b661c4c42596d0567dc85bab9e2a",
+                "url": "https://api.github.com/repos/battis/data-utilities/zipball/2675320d7b9099c0689a6db9e2262ea70d40742f",
+                "reference": "2675320d7b9099c0689a6db9e2262ea70d40742f",
                 "shasum": ""
             },
             "type": "library",
@@ -74,7 +148,7 @@
                 }
             ],
             "description": "A handful of useful helper functions to process data",
-            "time": "2015-08-27 20:31:48"
+            "time": "2015-10-11 14:54:59"
         },
         {
             "name": "battis/educoder-pest-fork",
@@ -82,12 +156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/pest.git",
-                "reference": "625347f7925d98cfc9df438b20eae77cfc33cab9"
+                "reference": "b12e9056465e2894bd698eede139a03b91723545"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/pest/zipball/625347f7925d98cfc9df438b20eae77cfc33cab9",
-                "reference": "625347f7925d98cfc9df438b20eae77cfc33cab9",
+                "url": "https://api.github.com/repos/battis/pest/zipball/b12e9056465e2894bd698eede139a03b91723545",
+                "reference": "b12e9056465e2894bd698eede139a03b91723545",
                 "shasum": ""
             },
             "require": {
@@ -116,7 +190,7 @@
             ],
             "description": "A proper REST client for PHP.",
             "homepage": "https://github.com/educoder/pest",
-            "time": "2015-08-17 19:12:55"
+            "time": "2016-02-15 19:52:14"
         },
         {
             "name": "elliottb/phpgraphlib",
@@ -124,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elliottb/phpgraphlib.git",
-                "reference": "3b0ee1d9828d4a4c35def65404432f986edd0650"
+                "reference": "479ec384e80ee5cda3f081b5715ab6f86982d38d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elliottb/phpgraphlib/zipball/3b0ee1d9828d4a4c35def65404432f986edd0650",
-                "reference": "3b0ee1d9828d4a4c35def65404432f986edd0650",
+                "url": "https://api.github.com/repos/elliottb/phpgraphlib/zipball/479ec384e80ee5cda3f081b5715ab6f86982d38d",
+                "reference": "479ec384e80ee5cda3f081b5715ab6f86982d38d",
                 "shasum": ""
             },
             "require": {
@@ -148,7 +222,7 @@
                 "graphing",
                 "graphs"
             ],
-            "time": "2014-03-25 06:01:57"
+            "time": "2016-01-10 08:49:41"
         },
         {
             "name": "pear/log",
@@ -264,12 +338,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "31a7162fbaebf5639a4c673ab41b9f1df7be27b3"
+                "reference": "ff6a8521bb588187eefa2695c3959fe101d22c18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/31a7162fbaebf5639a4c673ab41b9f1df7be27b3",
-                "reference": "31a7162fbaebf5639a4c673ab41b9f1df7be27b3",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ff6a8521bb588187eefa2695c3959fe101d22c18",
+                "reference": "ff6a8521bb588187eefa2695c3959fe101d22c18",
                 "shasum": ""
             },
             "require": {
@@ -311,20 +385,20 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-08-27 17:26:49"
+            "time": "2016-03-11 02:36:43"
         },
         {
             "name": "smtech/canvaspest",
-            "version": "v1.1",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smtech/canvaspest.git",
-                "reference": "fd29f4b62b500ee3016efe56f2324829f3cfd725"
+                "reference": "7a27a0cd228d1c1e7b4e2b8ca4855ff2c160c399"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smtech/canvaspest/zipball/fd29f4b62b500ee3016efe56f2324829f3cfd725",
-                "reference": "fd29f4b62b500ee3016efe56f2324829f3cfd725",
+                "url": "https://api.github.com/repos/smtech/canvaspest/zipball/7a27a0cd228d1c1e7b4e2b8ca4855ff2c160c399",
+                "reference": "7a27a0cd228d1c1e7b4e2b8ca4855ff2c160c399",
                 "shasum": ""
             },
             "require": {
@@ -347,7 +421,38 @@
                 }
             ],
             "description": "An extension of Pest to make RESTful queries to the Instructure Canvas API",
-            "time": "2015-08-22 01:41:57"
+            "time": "2016-02-15 20:29:40"
+        },
+        {
+            "name": "smtech/oauth-negotiator",
+            "version": "v1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smtech/oauth-negotiator.git",
+                "reference": "79f1ec4e80f0eba390fb23ac23ad110197961dd7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smtech/oauth-negotiator/zipball/79f1ec4e80f0eba390fb23ac23ad110197961dd7",
+                "reference": "79f1ec4e80f0eba390fb23ac23ad110197961dd7",
+                "shasum": ""
+            },
+            "require": {
+                "battis/educoder-pest-fork": "dev-master"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "sethbattis@stmarksschool.org"
+                }
+            ],
+            "description": "Negotiate an OAuth 2 authentication or API token",
+            "time": "2016-02-15 19:30:24"
         },
         {
             "name": "smtech/stmarks-colors",
@@ -388,28 +493,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/smtech/stmarkssmarty.git",
-                "reference": "71e3cc71a1f81c2b8bdb298b53bc183728c66af9"
+                "reference": "c666c7a958d4765ff5d7130ca4a3d0982728321f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smtech/stmarkssmarty/zipball/71e3cc71a1f81c2b8bdb298b53bc183728c66af9",
-                "reference": "71e3cc71a1f81c2b8bdb298b53bc183728c66af9",
+                "url": "https://api.github.com/repos/smtech/stmarkssmarty/zipball/c666c7a958d4765ff5d7130ca4a3d0982728321f",
+                "reference": "c666c7a958d4765ff5d7130ca4a3d0982728321f",
                 "shasum": ""
             },
             "require": {
-                "battis/data-utilities": "dev-master",
-                "smarty/smarty": "3.1.*",
+                "battis/bootstrapsmarty": "dev-develop",
                 "smtech/stmarks-colors": "dev-master"
             },
             "suggest": {
-                "battis/appmetadata": "MySQL-backed globals array for app metadata storage",
-                "eternicode/bootstrap-datepicker": "The full Bootstrap Datepicker package for local install"
+                "battis/appmetadata": "MySQL-backed globals array for app metadata storage"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    ""
-                ]
+                "psr-4": {
+                    "smtech\\StMarksSmarty\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -422,7 +525,27 @@
                 }
             ],
             "description": "A standard Smarty install for St. Mark's projects",
-            "time": "2015-08-26 19:31:34"
+            "time": "2016-03-14 19:56:16"
+        },
+        {
+            "name": "spvsoftwareproducts/LTI_Tool_Provider",
+            "version": "2.5.00",
+            "dist": {
+                "type": "zip",
+                "url": "http://projects.oscelot.org/gf/download/frsrelease/924/5882/LTI_Tool_Provider-2.5.00.zip",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Stephen Vickers"
+                }
+            ],
+            "homepage": "http://spvsoftwareproducts.com/php/lti_tool_provider/"
         },
         {
             "name": "tiben/crontab-manager",
