@@ -1,19 +1,11 @@
 <?php
 
-require_once(__DIR__ . '/smcanvaslib/config.inc.php');
-require_once(__DIR__ . '/.ignore.grading-analytics-authentication.inc.php');
-define('TOOL_START_PAGE', 'https://' . parse_url(CANVAS_API_URL, PHP_URL_HOST) . "/courses/{$_REQUEST['course_id']}");
-define('TOOL_START_LINK', 'Return to Canvas');
+require_once 'common.inc.php';
 
-require_once(__DIR__ . '/config.inc.php');
-require_once(__DIR__ . '/common.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/page-generator.inc.php');
-
-$statistics = mysqlQuery("
+$statistics = $sql->query("
 	SELECT * FROM `course_statistics`
 		WHERE
-			`course[id]` = '{$_REQUEST['course_id']}'
+			`course[id]` = '" . $course_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_course_id'] . "'
 		ORDER BY
 			`timestamp` DESC
 		LIMIT 1

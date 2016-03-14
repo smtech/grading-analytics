@@ -1,24 +1,15 @@
 <?php
 
-require_once('.ignore.grading-analytics-authentication.inc.php');
-define('TOOL_START_PAGE', 'https://' . parse_url(CANVAS_API_URL, PHP_URL_HOST) . "/accounts/{$_REQUEST['department_id']}");
+require_once 'common.inc.php';
 
-require_once(__DIR__ . '/smcanvaslib/config.inc.php');
-require_once(__DIR__ . '/config.inc.php');
-require_once(__DIR__ . '/common.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/canvas-api.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/page-generator.inc.php');
+$account_id = $course_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_account_id'];
 
-$departments = callCanvasApi(
-	CANVAS_API_GET,
-	"/accounts/{$_REQUEST['department_id']}"
-);
+$departments = $api->get("/accounts/$account_id");
 
-$statistics = mysqlQuery("
+$statistics = $sql->query("
 	SELECT * FROM `course_statistics`
 		WHERE
-			`course[account_id]` = '{$_REQUEST['department_id']}'
+			`course[account_id]` = '$account_id'
 		ORDER BY
 			`timestamp` DESC,
 			`course[name]` ASC
