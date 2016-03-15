@@ -54,26 +54,17 @@
 				
 						<h3>Grading Turn-Around Time Comparison</h3>
 						
-						<div class="image-placement">
-							<h4>All Courses</h4>
-							<a
-								data-lightbox="turn-around-comparison"
-								title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school."
-								href="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}"
-							>
-								<img src="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}"  style="width: 100%;" />
-								<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
-							</a>
-						</div>
+						<h4>All Courses</h4>
 						
-						<div class="image-placement" style="float: right; width: {$smarty.const.GRAPH_INSET_WIDTH};">
+						<a target="_blank" title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school." href="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}">
+							<img src="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}" style="width: 100%;" />
+							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
+						</a>
+						
+						<div style="float: right; width: {$smarty.const.GRAPH_INSET_WIDTH};">
 							<h4>{$statistic['account[name]']} Courses</h4>
-							<a
-								data-lightbox="turn-around-comparison"
-								title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department."
-								href="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}"
-							>
-								<img src="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}"  style="width: 100%;" />
+							<a target="_blank" title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department." href="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}">
+								<img src="graph/turn-around-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}" style="width: 100%;" />
 								<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the{$statistic['account[name]']} department.</p>
 							</a>
 						</div>
@@ -101,16 +92,10 @@
 				
 						<h3>Grading Turn-Around History</h3>
 						
-						<div class="image-placement">
-							<a
-								data-lightbox="turn-around-history"
-								title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time."
-								href="graph/turn-around-history.php?course_id={$statistic['course[id]']}"
-							>
-								<img src="graph/turn-around-history.php?course_id={$statistic['course[id]']}" width="100%" />
-								<p class="caption">The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time.</p>
-							</a>
-						</div>
+						<a target="_blank" title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time." href="graph/turn-around-history.php?course_id={$statistic['course[id]']}">
+							<img src="graph/turn-around-history.php?course_id={$statistic['course[id]']}" width="100%" />
+							<p class="caption">The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time.</p>
+						</a>
 						
 						<p class="caption">How is the average grading turn-around time changing in this course over time? Both the daily assignment expectation (<span class="one-week-underline">{$smarty.const.GRAPH_1_WEEK_STYLE} {$smarty.const.GRAPH_1_WEEK_COLOR} line</span>) and the major assignment expectation (<span class="two-week-underline">{$smarty.const.GRAPH_2_WEEK_STYLE} {$smarty.const.GRAPH_2_WEEK_COLOR} line</span>) are shown for reference.</p>
 						
@@ -131,16 +116,10 @@
 				
 						<h3>When are assignments posted?</h3>
 						
-						<div class="image-placement">
-							<a
-								data-lightbox="assignment-creation"
-								title="The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;"
-								href="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}"
-							>
-								<img src="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}" width="100%" />
-								<p class="caption">The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;</p>
-							</a>
-						</div>
+						<a target="_blank" title="The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;" href="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}">
+							<img src="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}" width="100%" />
+							<p class="caption">The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;</p>
+						</a>
 						
 						<p class="caption">When are assignments  posted to Canvas for &ldquo;{$statistic['course[name]']}&rdquo;? This histogram represents when during the course of the day, assignments have generally been created or modified for the course. The <span class="highlight-column"></span>{$smarty.const.GRAPH_HIGHLIGHT_COLOR} columns represent numbers of assignments created at a given hour during the day, while the <span class="data-column"></span>{$smarty.const.GRAPH_DATA_COLOR} columns represent the numbers of assignment edits made at a given hour during the day.</p>
 							
@@ -185,25 +164,15 @@
 				
 						<h3>Number of Assignments</h3>
 						
-						<div class="image-placement">
-							<h4>All Courses</h4>
-							<a
-								data-lightbox="assignment-count"
-								title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school."
-								href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}"
-							>
-								<img src="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}" width="100%" />
-								<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
-							</a>
-						</div>
+						<h4>All Courses</h4>
+						<a target="_blank" title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school." href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}">
+							<img src="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}" width="100%" />
+							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
+						</a>
 					
-						<div class="image-placement" style="width: {$smarty.const.GRAPH_INSET_WIDTH}; float: right;">
+						<div style="width: {$smarty.const.GRAPH_INSET_WIDTH}; float: right;">
 							<h4>{$statistic['account[name]']} Courses</h4>
-							<a
-								data-lightbox="assignment-count"
-								title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department."
-								href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}"
-							>
+							<a target="_blank" title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department." href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}">
 								<img src="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}" width="100%" />
 								<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department.</p>
 							</a>
