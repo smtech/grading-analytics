@@ -24,6 +24,7 @@ define('GRAPH_INSET_WIDTH', '40%'); // width of the inset departmental graphs in
 define('HISTOGRAM_CREATED', 'Created');
 define('HISTOGRAM_MODIFIED', 'Modified');
 
+$_SESSION['canvasInstanceUrl'] = 'https://' . $_SESSION['toolProvider']->user->getResourceLink()->settings['custom_canvas_api_domain'];
 
 $GRAPH_DATA_COUNT = 0;
 function graphWidth($dataCount = false) {

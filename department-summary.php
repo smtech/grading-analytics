@@ -6,7 +6,7 @@ $account_id = $course_id = $toolProvider->user->getResourceLink()->settings['cus
 
 $departments = $api->get("/accounts/$account_id");
 
-$statistics = $sql->query("
+$response = $sql->query("
 	SELECT * FROM `course_statistics`
 		WHERE
 			`course[account_id]` = '$account_id'
@@ -129,103 +129,23 @@ function getLevel($key, $value) {
 	return "";
 }
 
-$snapshot = "";
+$statistics = array();
 $firstCourseId = false;
-while (($statistic = $statistics->fetch_assoc()) && ($firstCourseId != $statistic['course[id]'])) {
+while (($statistic = $response->fetch_assoc()) && ($firstCourseId != $statistic['course[id]'])) {
 	if (!$firstCourseId) {
 		$firstCourseId = $statistic['course[id]'];
 	}
-	
-	$timestamp = new DateTime($statistic['timestamp']);
-	$oldestDueDate = new DateTime($statistic['oldest_ungraded_assignment_due_date']);
-
-	$snapshot .= "
-		<tr>
-			<td>" . implode("<br />",array_unique(unserialize($statistic['teacher[sortable_name]s']))) . "</td>
-			<td><a target=\"_blank\" href=\"" . SCHOOL_CANVAS_INSTANCE . "/courses/{$statistic['course[id]']}\">" . implode("<br />", explode(": ",$statistic['course[name]'])) . "</a></td>
-			<td>" . $statistic['student_count'] . "</td>
-			<td><span" . ($statistic['graded_assignment_count'] > 0 ? getLevel('average_grading_turn_around', $statistic['average_grading_turn_around']) : " class=\"warning level-3\"") . ">" . ($statistic['graded_assignment_count'] > 0 ? round($statistic['average_grading_turn_around'], 1) . " days" : 'No grades'). "</span></td>
-			<td><span" . getLevel('average_assignment_lead_time', round($statistic['average_assignment_lead_time'])) . ">" . round($statistic['average_assignment_lead_time'], 1) . " days</span></td>
-			<td><span" . getLevel('average_submissions_graded', $statistic['average_submissions_graded']) . ">" . round($statistic['average_submissions_graded']*100) . "%</span></td>
-			<td>" . $statistic['assignments_due_count'] . "</td>
-			<td><span" . getLevel('dateless_assignment_count', round($statistic['dateless_assignment_count'], 1)) . ">" . $statistic['dateless_assignment_count'] . "</span></td>
-			<td><span" . getLevel('created_after_due_count', $statistic['created_after_due_count']) . ">" . $statistic['created_after_due_count'] . "</span></td>
-			<td><span" . getLevel('gradeable_assignment_count', $statistic['gradeable_assignment_count']) . ">" . $statistic['gradeable_assignment_count'] .  "</span></td>
-			<td><span" . getLevel('graded_assignment_count', $statistic['graded_assignment_count']) . ">" . $statistic['graded_assignment_count'] .  "</span></td>
-			<td>" . (strlen($statistic['oldest_ungraded_assignment_name']) > 0 ? "<a href=\"{$statistic['oldest_ungraded_assignment_url']}\">{$statistic['oldest_ungraded_assignment_name']}</a><br />(due " . $oldestDueDate->format('F j, Y') . ")" : "-") . "</td>
-			<td><span" . getLevel('zero_point_assignment_count', $statistic['zero_point_assignment_count']) . ">" . $statistic['zero_point_assignment_count'] . "</span></td>
-			<td><a target=\"_blank\" href=\"{$statistic['gradebook_url']}\">Gradebook</a></td>
-			<td><a target=\"_blank\" href=\"{$statistic['analytics_page']}\">Grading<br />Analytics</a></td>
-		";
+	// FIXME this shouldn't be hard coded!
+	$statistic['analytics_page'] = "{$_SESSION['canvasInstanceUrl']}/courses/{$statistic['course[id]']}/external_tools/1174";
+	$statistics[] = $statistic;
 }
-displayPage("
-	<style type=\"text/css\">
-		table {
-			border-spacing: 0px 3px;
-			border-collapse: collapse;
-		}
 	
-		th, td {
-			padding: .5em;
-		}
-		
-		th {
-			font-size: smaller;
-		}
-	
-		td {
-			white-space: nowrap;
-		}
-		
-		.warning, .highlight {
-			font-weight: bold;
-			border-radius: 8px;
-			padding: .25em .5em;
-			white-space: nowrap;
-		}
-		
-		.highlight.level-3 {
-			background-color: #bbffbb;
-			color: #006600;
-		}
-		
-		.highlight.level-2 {
-			background-color: #eeffee;
-			color: #003300;
-		}
-		
-		.warning.level-2 {
-			background-color: #ffeebb;
-			color: #665500;
-		}
-		
-		.warning.level-3 {
-			background-color: #ffbbbb;
-			color: #990000;
-		}
-	</style>
-
-	<h1>{$departments['name']} Daily Snapshot</h1>
-	<p>" . $timestamp->format('F j, Y') . "</p>
-	
-	<table class=\"striped\">
-		<tr>
-			<th>Teacher(s)</th>
-			<th>Course</th>
-			<th>Students</th>
-			<th>Turn-Around</th>
-			<th>Lead Time</th>
-			<th>Graded</th>
-			<th>Due</th>
-			<th>No Due Dates</th>
-			<th>Retroactive Assignments</th>
-			<th>Gradeable Assignments</th>
-			<th>Graded Assignments</th>
-			<th>Oldest Ungraded</th>
-			<th>Zero-Point Assignments</th>
-			<th colspan=\"2\">Course Links</th>
-		</tr>
-" . $snapshot . "
-	</table>");
+$smarty->addStylesheet("{$metadata['APP_URL']}/css/department-summary.css");
+if (isset($smarty->register_function)) {
+	$smarty->register_function('getLevel', 'getLevel');
+}
+$smarty->assign('statistics', $statistics);
+$smarty->assign('departments', $departments);
+$smarty->display('department-summary.tpl');
 
 ?>

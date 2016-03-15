@@ -5,6 +5,8 @@
 	<div class="container">
 		<div class="page-header">
 			<h1>Grading Analytics <small>{$statistic['course[name]']}</small></h1>
+			<p>{$statistic['timestamp']|date_format:'F j, Y'} Snapshot</p>
+
 		</div>
 	</div>
 
