@@ -1,14 +1,9 @@
 <?php
 
-require_once(__DIR__ . '/../smcanvaslib/config.inc.php');
-require_once(__DIR__ . '/../config.inc.php');
-require_once(__DIR__ . '/../common.inc.php');
-require_once(__DIR__ . '/../.ignore.grading-analytics-authentication.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/mysql.inc.php');
-require_once(SMCANVASLIB_PATH . '/include/phpgraphlib/phpgraphlib.php');
+require_once 'common.inc.php';
 
 $query = "SELECT * FROM `course_statistics` WHERE `course[id]` = '" . $_REQUEST['course_id'] . "' ORDER BY `timestamp` DESC LIMIT 1";
-$response = mysqlQuery($query);
+$response = $sql->query($query);
 $course = $response->fetch_assoc();
 $timestamp = preg_replace('/^(.*)T.*$/', '$1', $course['timestamp']);
 
@@ -27,7 +22,7 @@ $query = "
 			`average_grading_turn_around` ASC
 ";
 
-if ($stats = mysqlQuery($query)) {
+if ($stats = $sql->query($query)) {
 	$data = array();
 	$courseName = '';
 	while ($row = $stats->fetch_assoc()) {
