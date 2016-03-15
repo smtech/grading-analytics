@@ -275,8 +275,7 @@
 						<p>Do you have any questions about the information shown here? Do you want to see different data that is not presented here? There is lots more information about Canvas, how to use it and how we are trying to use it.</p>
 						
 						<ul>
-							<li><a target="_blank" href="https://stmarksschool.instructure.com/courses/489">Canvas Training</a> course online</li>
-							<li><a target="_blank" href="http://guides.instructure.com/">Canvas Guides</a> to just about everything</li>
+							<li><a target="_blank" href="https://community.canvaslms.com/community/answers/guides">Canvas Guides</a> to just about everything</li>
 							<li><a target="_blank" href="http://helpdesk.stmarksschool.org/blog/keyword/canvas/">Tech Tips</a> specific to St. Mark&rsquo;s</li>
 							<li><a target="_blank" href="https://stmarksschool.instructure.com/courses/97/wiki/academic-technology">Academic Technology wiki</a> links to lots of other germane information</li>
 						</ul>
