@@ -41,8 +41,8 @@ if ($stats = $sql->query($query)) {
 	}
 	
 	$graph = new PHPGraphLib(graphWidth(count($data)), graphHeight());
-	$graph->addData($data);
-	$graph->addData($highlight);
+	$graph->addData(array_values($data));
+	$graph->addData(array_values($highlight));
 	$graph->setBarColor(GRAPH_DATA_COLOR, GRAPH_HIGHLIGHT_COLOR);
 	$graph->setBarOutline(false);
 	$graph->setLegend(true);
