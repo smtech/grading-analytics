@@ -2,6 +2,10 @@
 
 require_once 'common.inc.php';
 
+use smtech\StMarksSmarty\StMarksSmarty;
+
+$smarty->enable(StMarksSmarty::MODULE_SORTABLE);
+
 $account_id = $course_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_account_id'];
 
 $departments = $api->get("/accounts/$account_id");

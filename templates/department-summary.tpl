@@ -10,7 +10,7 @@
 	</div>
 	
 	<div class="container container-fluid">
-		<table class="table table-hover table-striped table-condensed">
+		<table class="table table-hover table-striped table-condensed sortable">
 			<thead>
 				<tr>
 					<th>Teacher(s)</th>
@@ -24,9 +24,9 @@
 					<th>Retroactive Assignments</th>
 					<th>Gradable Assignments</th>
 					<th>Graded Assignments</th>
-					<th>Oldest Ungraded Assignment</th>
+					<th data-dateformat="MMM DD, YYYY">Oldest Ungraded Assignment</th>
 					<th>Zero-Point Assignments</th>
-					<th colspan="2">Course Links</th>
+					<th colspan="2" data-defaultsort="disabled">Course Links</th>
 				</tr>
 			</thead>
 			<tbody>
