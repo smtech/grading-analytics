@@ -2,7 +2,7 @@
 
 require_once 'common.inc.php';
 
-$query = "SELECT * FROM `course_statistics` WHERE `course[id]` = '" . $_REQUEST['course_id'] . "' LIMIT 1";
+$query = "SELECT * FROM `course_statistics` WHERE `course[id]` = '" . $_REQUEST['course_id'] . "' ORDER BY `timestamp` DESC LIMIT 1";
 $response = $sql->query($query);
 $course = $response->fetch_assoc();
 $timestamp = preg_replace('/^(.*)T.*$/', '$1', $course['timestamp']);
@@ -19,7 +19,7 @@ $query = "
 			) . "		`timestamp` LIKE '$timestamp%'
 	) AS `stats`
 		GROUP BY
-			`course[id]` 
+			`course[id]`
 ";
 
 $courseName = '';
@@ -39,7 +39,7 @@ if ($stats = $sql->query($query)) {
 			$highlight[$key] = 0;
 		}
 	}
-	
+
 	$graph = new PHPGraphLib(graphWidth(count($data)), graphHeight());
 	$graph->addData(array_values($data));
 	$graph->addData(array_values($highlight));
