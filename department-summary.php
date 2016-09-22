@@ -10,10 +10,21 @@ $account_id = $course_id = $toolProvider->user->getResourceLink()->settings['cus
 
 $departments = $api->get("/accounts/$account_id");
 
+/* find the most recent day's timestamp */
+$response = $sql->query("
+    SELECT * FROM `course_statistics`
+        WHERE `course[account_id]` = '$account_id'
+        ORDER BY
+            `timestamp` DESC
+        LIMIT 1
+");
+$row = $response->fetch_assoc();
+preg_match('/(\d{4,4}-\d{2,2}-\d{2,2}).*/', $row['timestamp'], $match);
+
 $response = $sql->query("
 	SELECT * FROM `course_statistics`
 		WHERE
-			`course[account_id]` = '$account_id'
+			`course[account_id]` = '$account_id' AND `timestamp` like '{$match[1]}%'
 		ORDER BY
 			`timestamp` DESC,
 			`course[name]` ASC
@@ -24,11 +35,11 @@ class Level {
 	public static $GREATER_THAN_OR_EQUAL = 1;
 	public static $LESS_THAN_OR_EQUAL = 2;
 	public static $LESS_THAN = 3;
-	
+
 	public $level;
 	public $value;
 	public $comparison;
-	
+
 	public function __construct($level, $value, $comparison) {
 		$this->level = $level;
 		$this->value = $value;
@@ -143,7 +154,7 @@ while (($statistic = $response->fetch_assoc()) && ($firstCourseId != $statistic[
 	$statistic['analytics_page'] = "{$_SESSION['canvasInstanceUrl']}/courses/{$statistic['course[id]']}/external_tools/1174";
 	$statistics[] = $statistic;
 }
-	
+
 $smarty->addStylesheet("{$metadata['APP_URL']}/css/department-summary.css");
 if (isset($smarty->register_function)) {
 	$smarty->register_function('getLevel', 'getLevel');

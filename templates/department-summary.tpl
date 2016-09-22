@@ -8,7 +8,7 @@
 			<p>{$statistics[0]['timestamp']|date_format:'F j, Y'} Snapshot</p>
 		</div>
 	</div>
-	
+
 	<div class="container container-fluid">
 		<table class="table table-hover table-striped table-condensed sortable">
 			<thead>
@@ -48,21 +48,21 @@
 
 						<td class="sorting-value">{round($statistic['average_assignment_lead_time'], 1)}</td>
 						<td><span{getLevel('average_assignment_lead_time', round($statistic['average_assignment_lead_time']))}>{round($statistic['average_assignment_lead_time'], 1)} days</span></td>
-						
+
 						<td class="sorting-value">{round($statistic['average_submissions_graded']*100)}</td>
 						<td><span{getLevel('average_submissions_graded', $statistic['average_submissions_graded'])}>{round($statistic['average_submissions_graded']*100)}%</span></td>
 						<td>{$statistic['assignments_due_count']}</td>
-						
+
 						<td class="sorting-value">{$statistic['dateless_assignment_count']}</td>
 						<td><span{getLevel('dateless_assignment_count', round($statistic['dateless_assignment_count'], 1))}>{$statistic['dateless_assignment_count']}</span></td>
-						
+
 						<td class="sorting-value">{$statistic['created_after_due_count']}</td>
 						<td><span{getLevel('created_after_due_count', $statistic['created_after_due_count'])}>{$statistic['created_after_due_count']}</span></td>
 						<td><span{getLevel('gradeable_assignment_count', $statistic['gradeable_assignment_count'])}>{$statistic['gradeable_assignment_count']}</span></td>
 						<td><span{getLevel('graded_assignment_count', $statistic['graded_assignment_count'])}>{$statistic['graded_assignment_count']}</span></td>
 						<td class="sorting-value">{$statistic['oldest_ungraded_assignment_due_date']|date_format:'Y-m-d'}</td>
 						<td>{if strlen($statistic['oldest_ungraded_assignment_name']) > 0}<a href="{$statistic['oldest_ungraded_assignment_url']}">{$statistic['oldest_ungraded_assignment_name']}</a><br /><small>(due {$statistic['oldest_ungraded_assignment_due_date']|date_format:'F j, Y'})</small>{else}-{/if}</td>
-						
+
 						<td class="sorting-value">{$statistic['zero_point_assignment_count']}</td>
 						<td><span{getLevel('zero_point_assignment_count', $statistic['zero_point_assignment_count'])}>{$statistic['zero_point_assignment_count']}</span></td>
 						<td><a class="btn btn-default" target="_blank" href="{$statistic['gradebook_url']}">Gradebook</a></td>
