@@ -4,16 +4,49 @@ require_once 'common.inc.php';
 
 use smtech\StMarksSmarty\StMarksSmarty;
 
+/*
+ * FIXME this should not be hard-coded -- roles should be configurable.
+ */
+$unrestrictedRoles = [
+    'AccountAdmin',
+    'Dean',
+    'Department Chair'
+];
+
 $smarty->enable(StMarksSmarty::MODULE_SORTABLE);
 
-$account_id = $course_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_account_id'];
-
+$account_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_account_id'];
 $departments = $api->get("/accounts/$account_id");
+
+/* verify user privileges */
+$user_id = $toolProvider->user->getResourceLink()->settings['custom_canvas_user_id'];
+$restricted = true;
+$permissionsAccount = $departments;
+do {
+    $roles = $api->get(
+        "/accounts/{$permissionsAccount['id']}/admins",
+        [
+            'user_id[]' => $user_id
+        ]
+    );
+    foreach ($roles as $role) {
+        if (in_array($role['role'], $unrestrictedRoles)) {
+            $restricted = false;
+            break;
+        }
+    }
+    if ($restricted && !empty($permissionsAccount['parent_account_id'])) {
+        $permissionsAccount = $api->get("/accounts/{$permissionsAccount['parent_account_id']}");
+    } else {
+        $permissionsAccount = false;
+    }
+} while ($restricted && $permissionsAccount !== false);
 
 /* find the most recent day's timestamp */
 $response = $sql->query("
     SELECT * FROM `course_statistics`
-        WHERE `course[account_id]` = '$account_id'
+        WHERE `course[account_id]` = '$account_id'" .
+        ($restricted ? "AND `teacher[id]s` regexp 'a:[0-9]+:\{(i:[0-9]+;i:[0-9]+;)*i:[0-9]+;i:$user_id;'" : '') . "
         ORDER BY
             `timestamp` DESC
         LIMIT 1
@@ -24,7 +57,8 @@ preg_match('/(\d{4,4}-\d{2,2}-\d{2,2}).*/', $row['timestamp'], $match);
 $response = $sql->query("
 	SELECT * FROM `course_statistics`
 		WHERE
-			`course[account_id]` = '$account_id' AND `timestamp` like '{$match[1]}%'
+			`course[account_id]` = '$account_id' AND `timestamp` like '{$match[1]}%'" .
+            ($restricted ? "AND `teacher[id]s` regexp 'a:[0-9]+:\{(i:[0-9]+;i:[0-9]+;)*i:[0-9]+;i:$user_id;'" : '') . "
 		ORDER BY
 			`timestamp` DESC,
 			`course[name]` ASC
