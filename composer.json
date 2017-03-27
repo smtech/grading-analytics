@@ -1,5 +1,5 @@
 {
-    "name": "smtech/canvas-grading-analytics",
+    "name": "smtech/grading-analytics",
     "description": "Track and present rich feedback on faculty behavior in Canvas (akin to the course analytics data on on students)",
 	"license": "GPL-3.0",
 	"config": {
@@ -19,7 +19,7 @@
 				"authors": [
 					{
 						"name": "Stephen Vickers"
-					}   
+					}
 				],
 				"homepage": "http://spvsoftwareproducts.com/php/lti_tool_provider/"
 			}
