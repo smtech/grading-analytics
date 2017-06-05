@@ -1,5 +1,10 @@
 <?php
 
+define('CONFIG_FILE', __DIR__ . '/config.xml');
+define('CANVAS_INSTANCE_URL', 'canvas_instance_url');
+define('ACCOUNT_ID', 'account_id');
+define('COURSE_ID', 'course_id');
+
 define('SCHOOL_TIME_ZONE', 'America/New_York'); // Go Sox! Stupid PHP.
 
 define('DATA_COLLECTION_CRONTAB', '0 0 * * *'); // collect data every night at midnight
@@ -23,4 +28,3 @@ define('GRAPH_INSET_WIDTH', '40%'); // width of the inset departmental graphs in
 
 define('HISTOGRAM_CREATED', 'Created');
 define('HISTOGRAM_MODIFIED', 'Modified');
-
