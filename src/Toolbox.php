@@ -20,6 +20,8 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
             'visibility',
             'admins'
         );
+
+        return $this->generator;
     }
 
     private $GRAPH_DATA_COUNT = 0;

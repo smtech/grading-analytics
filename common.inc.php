@@ -25,4 +25,6 @@ if (empty($_SESSION[CANVAS_INSTANCE_URL]) &&
     $_SESSION[CANVAS_INSTANCE_URL] = 'https://' . $_SESSION[ToolProvider::class]['canvas']['api_domain'];
 }
 
-$toolbox->smarty_assign('canvasInstanceUrl', $_SESSION[CANVAS_INSTANCE_URL]);
+if (!empty($_SESSION[CANVAS_INSTANCE_URL])) {
+    $toolbox->smarty_assign('canvasInstanceUrl', $_SESSION[CANVAS_INSTANCE_URL]);
+}
