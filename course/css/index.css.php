@@ -4,6 +4,7 @@ require_once 'common.inc.php';
 
 // TODO grow up and use SASS or something to propocess your CSS!
 
+header('Content-Type: text/css');
 ?>
 
 .average-underline {

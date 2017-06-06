@@ -23,4 +23,10 @@ $toolbox->smarty_assign([
     'averageAssignmentCount' => $toolbox->averageAssignmentCount(),
     'averageAssignmentCountDepartment' => $toolbox->averageTurnAround($statistic['course[account_id]'])
 ]);
+$toolbox->getSmarty()->addScript(
+    DataUtilities::URLfromPath(__DIR__ . '/../vendor/npm-asset/chart.js/dist/Chart.min.js')
+);
+$toolbox->getSmarty()->addScript(
+    DataUtilities::URLfromPath(__DIR__ . '/js/index.js')
+);
 $toolbox->smarty_display('course-summary.tpl');

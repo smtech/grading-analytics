@@ -30,8 +30,8 @@
     ],
 	"require": {
         "smtech/stmarks-reflexive-canvas-lti": "^0.2",
-        "elliottb/phpgraphlib": "dev-master",
 		"pear/log": "~1.12",
+        "npm-asset/chart.js": "~2.2",
         "battis/data-utilities": "^0.1"
 	},
 	"autoload": {
