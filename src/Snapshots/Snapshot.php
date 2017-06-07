@@ -49,6 +49,12 @@ class Snapshot extends CacheableDatabase
     protected $averages;
 
     /**
+     * Temporary storage for teacher filters
+     * @var string|integer|false
+     */
+    public static $teacherFilter;
+
+    /**
      * Construct a Snapshot object
      *
      * Note that the snapshots are queried and/or cached from the database
@@ -167,8 +173,8 @@ class Snapshot extends CacheableDatabase
      *
      * @see Average `Average` for available averages
      *
-     * @param  Average $average [description]
-     * @return [type]           [description]
+     * @param  Average $average
+     * @return float
      */
     public function getAverage(Average $average)
     {
@@ -204,11 +210,12 @@ class Snapshot extends CacheableDatabase
         } elseif ($this->cacheSnapshot()) {
             $d = $this->getDomain()->getValue();
             if ($teacherFilter) {
+                self::$teacherFilter = $teacherFilter;
                 return array_filter(
                     static::$data[$this->getCourseId()][$d][$this->getTimestamp()],
                     function ($elt) {
                         return array_search(
-                            $teacherFilter,
+                            self::$teacherFilter,
                             unserialize($elt['teacher[id]s'])
                         ) !== false;
                     }

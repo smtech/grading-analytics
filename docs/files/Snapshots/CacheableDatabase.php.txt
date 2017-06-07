@@ -41,7 +41,6 @@ class CacheableDatabase
      */
     public function __construct($databaseProvider)
     {
-        $this->sql = false;
         if (is_a($databaseProvider, mysqli::class)) {
             $this->sql = $databaseProvider;
         } elseif (is_a($databaseProvider, CacheableDatabase::class)) {
@@ -81,9 +80,9 @@ class CacheableDatabase
         if (empty($this->cache)) {
             $this->cache = new HierarchicalSimpleCache(
                 $this->getMySql(),
-                get_class($this),
-                true
+                get_class($this)
             );
+            $this->cache->purgeExpired();
         }
         return $this->cache;
     }
