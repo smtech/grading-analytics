@@ -75,7 +75,7 @@ while (($statistic = $response->fetch_assoc()) && ($firstCourseId != $statistic[
         $firstCourseId = $statistic['course[id]'];
     }
     // FIXME this shouldn't be hard coded!
-    $statistic['analytics_page'] = $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$statistic['course[id]']}/external_tools/1174";
+    $statistic['analytics_page'] = $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$statistic['course[id]']}/external_tools/1638";
     $statistics[] = $statistic;
 }
 
