@@ -2,8 +2,6 @@
 
 namespace smtech\GradingAnalytics\Snapshots;
 
-use smtech\GradingAnalytics\Snapshots\Exception\SnapshotException;
-
 class Snapshot extends CacheableDatabase
 {
     const NOT_ASSOCIATED_WITH_COURSE = 'n/a';

@@ -3,7 +3,6 @@
 namespace smtech\GradingAnalytics;
 
 use smtech\LTI\Configuration\Option;
-use Battis\HierarchicalSimpleCache;
 
 class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 {
