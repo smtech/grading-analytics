@@ -63,8 +63,8 @@
 
 						<div style="float: right; width: {$smarty.const.GRAPH_INSET_WIDTH};">
 							<h4>{$statistic['account[name]']} Courses</h4>
-                            <canvas id="turnAroundComparisonDept" width="100%" height="75%"></canvas>
-							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the{$statistic['account[name]']} department.</p>
+                            <canvas id="turnAroundComparisonDept" width="100%" height="50%"></canvas>
+							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department.</p>
 						</div>
 
 						<p class="caption">What is the average turn-around time (in days) in this course for an assignment, from due date to posted grade in Canvas? The expectation articulated in the faculty handbook is that daily assignments will be returned within a week (<span class="one-week-underline">{$smarty.const.GRAPH_1_WEEK_STYLE} {$smarty.const.GRAPH_1_WEEK_COLOR} line</span>) and that major assignments will be returned within two weeks (<span class="two-week-underline">{$smarty.const.GRAPH_2_WEEK_STYLE} {$smarty.const.GRAPH_2_WEEK_COLOR} line</span>). The expectation is that grades will be posted to Canvas at approximately the same time as they are returned to students.</p>
@@ -90,10 +90,8 @@
 
 						<h3>Grading Turn-Around History</h3>
 
-						<a target="_blank" title="The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time." href="graph/turn-around-history.php?course_id={$statistic['course[id]']}">
-							<foo src="graph/turn-around-history.php?course_id={$statistic['course[id]']}" width="100%" />
-							<p class="caption">The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time.</p>
-						</a>
+                        <canvas id="turnAroundHistory" width="100%" height="37%"></canvas>
+						<p class="caption">The average grading turn-around time in &ldquo;{$statistic['course[name]']}&rdquo; over time.</p>
 
 						<p class="caption">How is the average grading turn-around time changing in this course over time? Both the daily assignment expectation (<span class="one-week-underline">{$smarty.const.GRAPH_1_WEEK_STYLE} {$smarty.const.GRAPH_1_WEEK_COLOR} line</span>) and the major assignment expectation (<span class="two-week-underline">{$smarty.const.GRAPH_2_WEEK_STYLE} {$smarty.const.GRAPH_2_WEEK_COLOR} line</span>) are shown for reference.</p>
 
@@ -114,10 +112,8 @@
 
 						<h3>When are assignments posted?</h3>
 
-						<a target="_blank" title="The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;" href="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}">
-							<foo src="graph/created-modified-histogram.php?course_id={$statistic['course[id]']}" width="100%" />
-							<p class="caption">The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;</p>
-						</a>
+                        <canvas id="createdModifiedHistogram" width="100%" height="37%"></canvas>
+						<p class="caption">The times of day when assignments are created and modified for &ldquo;{$statistic['course[name]']}.&rdquo;</p>
 
 						<p class="caption">When are assignments  posted to Canvas for &ldquo;{$statistic['course[name]']}&rdquo;? This histogram represents when during the course of the day, assignments have generally been created or modified for the course. The <span class="highlight-column"></span>{$smarty.const.GRAPH_HIGHLIGHT_COLOR} columns represent numbers of assignments created at a given hour during the day, while the <span class="data-column"></span>{$smarty.const.GRAPH_DATA_COLOR} columns represent the numbers of assignment edits made at a given hour during the day.</p>
 
@@ -163,17 +159,15 @@
 						<h3>Number of Assignments</h3>
 
 						<h4>All Courses</h4>
-						<a target="_blank" title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school." href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}">
-							<foo src="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}" width="100%" />
-							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
-						</a>
+
+                        <canvas id="assignmentCountComparison" width="100%" height="37%"></canvas>
+						<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the school.</p>
 
 						<div style="width: {$smarty.const.GRAPH_INSET_WIDTH}; float: right;">
 							<h4>{$statistic['account[name]']} Courses</h4>
-							<a target="_blank" title="The number of assignments posted in Canvas for &ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department." href="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}">
-								<foo src="graph/assignment-count-comparison.php?course_id={$statistic['course[id]']}&department_id={$statistic['course[account_id]']}" width="100%" />
-								<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department.</p>
-							</a>
+
+                            <canvas id="assignmentCountComparisonDept" width="100%" height="50%"></canvas>
+							<p class="caption">&ldquo;{$statistic['course[name]']}&rdquo; compared to all active courses in the {$statistic['account[name]']} department.</p>
 						</div>
 
 						<p class="caption">How many assignments have been posted to Canvas for &ldquo;{$statistic['course[name]']}&rdquo;?</p>
@@ -287,7 +281,11 @@
 
 {block name="post-bootstrap-scripts"}
 <script>
-    graphs.turnAroundComparison("#turnAroundComparison", "{$statistic['course[id]']}");
-    graphs.turnAroundComparison("#turnAroundComparisonDept", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
+    graphs.loadGraph("#turnAroundComparison", "turn-around-comparison.php", "{$statistic['course[id]']}");
+    graphs.loadGraph("#turnAroundComparisonDept", "turn-around-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
+    graphs.loadGraph("#turnAroundHistory", "turn-around-history.php", "{$statistic['course[id]']}");
+    graphs.loadGraph("#createdModifiedHistogram", "created-modified-histogram.php", "{$statistic['course[id]']}");
+    graphs.loadGraph("#assignmentCountComparison", "assignment-count-comparison.php", "{$statistic['course[id]']}");
+    graphs.loadGraph("#assignmentCountComparisonDept", "assignment-count-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
 </script>
 {/block}
