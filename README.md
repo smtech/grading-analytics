@@ -5,4 +5,4 @@
 
 Generate some reporting on faculty grading practices. To start automated data-collection, run the private/data-collection.sh script once. It will harvest the first round of data and then create a crontab job to repeat that process every night at midnight.
 
-[The data collected is described here.](https://smtech.github.io/grading-analytics/definitions.html);
+A description of the information collected by is [available online](https://smtech.github.io/grading-analytics/definitions.html).
