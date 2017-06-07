@@ -47,33 +47,34 @@ class History extends CacheableDatabase
 
     public function cacheHistory()
     {
-        if (empty(static::$data[$this->getCourseId()])) {
-            static::$data = $this->getCache()->getCache($this->getCourseId());
+        $courseId = $this->getCourseId();
+        if (empty(static::$data[$courseId])) {
+            static::$data = $this->getCache()->getCache($courseId);
             if (empty($this->data)) {
                 if ($response = $this->sql->query("
                     SELECT * FROM `course_statistics`
                         WHERE
-                            `course[id]` = '" . $this->getCourseId() . "'
+                            `course[id]` = '$courseId'
                         ORDER BY
                             `timestamp` DESC
                 ")) {
                     while ($row = $response->fetch_assoc()) {
-                        static::$data[$this->getCourseId()][] = $row;
+                        static::$data[$courseId][] = $row;
                     }
-                    $this->getCache()->setCache($this->getCourseId(), static::$data[$This->getCourseId()]);
+                    $this->getCache()->setCache($courseId, static::$data[$courseId]);
                 }
             }
         }
         return (is_array(static::$data) &&
-            is_array(static::$data[$this->getCourseId()]) &&
-            count(static::$data[$this->getCourseId()]) > 0
+            is_array(static::$data[$courseId]) &&
+            count(static::$data[$courseId]) > 0
         );
     }
 
     public function getHistory()
     {
         if ($this->cacheHistory()) {
-            return $this->data;
+            return static::$data[$this->getCourseId()];
         }
         return false;
     }

@@ -20,7 +20,7 @@ $output = [
     ]
 ];
 
-$data = $toolbox->getCourseHistory($_REQUEST['course_id']);
+$data = $toolbox->getHistory($_REQUEST['course_id']);
 usort($data, function ($left, $right) {
     return strtotime($left['timestamp']) - strtotime($right['timestamp']);
 });

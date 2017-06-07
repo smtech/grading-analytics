@@ -3,6 +3,9 @@
 namespace smtech\GradingAnalytics;
 
 use smtech\LTI\Configuration\Option;
+use smtech\GradingAnalytics\Snapshots\Domain;
+use smtech\GradingAnalytics\Snapshots\History;
+use smtech\GradingAnalytics\Snapshots\Snapshot;
 
 class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 {
@@ -66,9 +69,10 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 
     public function getSnapshot($courseOrDepartmentId, Domain $domain, $isCourseId = true, $teacherFilter = false)
     {
-        if (empty($this->snapshots[$domain])) {
-            $this->snapshots[$domain] = new Snapshot($this, $domain, $courseOrDepartmentId, $isCourseId);
+        $d = $domain->getValue();
+        if (empty($this->snapshots[$d])) {
+            $this->snapshots[$d] = new Snapshot($this, $domain, $courseOrDepartmentId, $isCourseId);
         }
-        return $this->snapshots[$domain]->getSnapshot($teacherFilter);
+        return $this->snapshots[$d]->getSnapshot($teacherFilter);
     }
 }

@@ -7,6 +7,7 @@ use smtech\StMarksSmarty\StMarksSmarty;
 use smtech\ReflexiveCanvasLTI\LTI\ToolProvider;
 use smtech\GradingAnalytics\Toolbox;
 use smtech\GradingAnalytics\HeatMap\HeatMap;
+use smtech\GradingAnalytics\Snapshots\Domain;
 
 /*
  * FIXME this should not be hard-coded -- roles should be configurable.
@@ -74,7 +75,7 @@ $toolbox->getSmarty()->registerPlugin(
     ]
 );
 $toolbox->smarty_assign([
-    'statistics' => $toolbox->getSnapshot($_SESSION[ACCOUNT_ID], Domain::DEPARTMENT, true, ($restricted ? $user_id : false)),
+    'statistics' => $toolbox->getSnapshot($_SESSION[ACCOUNT_ID], Domain::DEPARTMENT(), false, ($restricted ? $user_id : false)),
     'departments' => $departments
 ]);
 $toolbox->smarty_display('department-summary.tpl');

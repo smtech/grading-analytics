@@ -2,7 +2,9 @@
 
 require_once 'common.inc.php';
 
-$snapshot = $toolbox->getCourseSnapshot($_REQUEST['course_id']);
+use smtech\GradingAnalytics\Snapshots\Domain;
+
+$snapshot = $toolbox->getSnapshot($_REQUEST['course_id'], Domain::COURSE());
 $data = unserialize($snapshot['created_modified_histogram']);
 
 $output = [

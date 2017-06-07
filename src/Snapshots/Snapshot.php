@@ -82,7 +82,7 @@ class Snapshot extends CacheableDatabase
             if (!empty($this->history)) {
                 $this->timestamp = $this->history->getCurrentTimestamp();
             } else {
-                if ($response = $this->sql->query("
+                if ($response = $this->getMySql()->query("
                     SELECT * FROM `course_statistics`
                         WHERE
                             `course[account_id]` = '" . $this->getDepartmentId() . "'
@@ -102,7 +102,7 @@ class Snapshot extends CacheableDatabase
     public function getAverage(Average $average)
     {
         if ($this->cacheSnapshot()) {
-            return $this->averages[$average];
+            return $this->averages[$average->getValue()];
         }
         return false;
     }
@@ -114,9 +114,10 @@ class Snapshot extends CacheableDatabase
                 return $snapshot[0];
             }
         } elseif ($this->cacheSnapshot()) {
+            $d = $this->getDomain()->getValue();
             if ($teacherFilter) {
                 return array_filter(
-                    static::$data[$this->getCourseId()][$this->getDomain()][$this->getTimestamp()],
+                    static::$data[$this->getCourseId()][$d][$this->getTimestamp()],
                     function ($elt) {
                         return array_search(
                             $teacherFilter,
@@ -125,7 +126,7 @@ class Snapshot extends CacheableDatabase
                     }
                 );
             }
-            return static::$data[$this->getCourseId()][$this->getDomain()][$this->getTimestamp()];
+            return static::$data[$this->getCourseId()][$d][$this->getTimestamp()];
         }
         return false;
     }
@@ -140,17 +141,19 @@ class Snapshot extends CacheableDatabase
     public function cacheSnapshot()
     {
         $domain = $this->getDomain();
-        if ($domain == Domain::Course()) {
+        if ($domain == Domain::COURSE()) {
             return $this->history->cacheHistory();
         } else {
             $courseId = $this->getCourseId();
+            $d = $domain->getValue();
             $timestamp = $this->getTimestamp();
-            if (empty(static::$data[$courseId][$domain][$timestamp])) {
-                $cache->pushKey(($domain == Domain::DEPARTMENT() ? $this->getDepartmentId() : 'school'));
-                static::$data[$courseId][$domain][$timestamp] = $cache->getCache($timestamp);
-                $this->averages = $cache->getCache("$timestamp-averages");
-                if (empty(static::$data[$courseId][$domain][$timestamp])) {
-                    if ($response = $this->mysql_query("
+            if (empty(static::$data[$courseId][$d][$timestamp])) {
+                $this->getCache()->pushKey($courseId);
+                $this->getCache()->pushKey(($domain == Domain::DEPARTMENT() ? $this->getDepartmentId() : 'school'));
+                static::$data[$courseId][$d][$timestamp] = $this->getCache()->getCache($timestamp);
+                $this->averages = $this->getCache()->getCache("$timestamp-averages");
+                if (empty(static::$data[$courseId][$d][$timestamp])) {
+                    if ($response = $this->getMySql()->query("
                         SELECT * FROM `course_statistics`
                             WHERE
                                 " . ($domain == Domain::DEPARTMENT() ?
@@ -164,44 +167,44 @@ class Snapshot extends CacheableDatabase
                                 `timestamp` DESC
                     ")) {
                         $total = [
-                            self::AVERAGE_TURN_AROUND => 0,
-                            self::AVERAGE_ASSIGNMENT_COUNT => 0
+                            Average::TURN_AROUND => 0,
+                            Average::ASSIGNMENT_COUNT => 0
                         ];
                         $divisor = [
-                            self::AVERAGE_TURN_AROUND => 0,
-                            self::AVERAGE_ASSIGNMENT_COUNT => $response->num_rows
+                            Average::TURN_AROUND => 0,
+                            Average::ASSIGNMENT_COUNT => $response->num_rows
                         ];
 
                         while ($row = $response->fetch_assoc()) {
-                            static::$data[$courseId][$domain][$timestamp][] = $row;
+                            static::$data[$courseId][$d][$timestamp][] = $row;
 
-                            $total[self::AVERAGE_TURN_AROUND] +=
+                            $total[Average::TURN_AROUND] +=
                                 $row['average_grading_turn_around'] *
                                 $row['student_count'] *
                                 $row['graded_assignment_count'];
-                            $divisor[self::AVERAGE_TURN_AROUND] +=
+                            $divisor[Average::TURN_AROUND] +=
                                 $row['student_count'] *
                                 $row['graded_assignment_count'];
 
-                            $total[self::AVERAGE_ASSIGNMENT_COUNT] +=
+                            $total[Average::ASSIGNMENT_COUNT] +=
                                 $row['assignments_due_count'] +
                                 $row['dateless_assignment_count'];
                         }
 
                         for ($i = 0; $i < count($total); $i++) {
-                            $this->averages[$i] = $total[$i] / $divisor[$i];
+                            $this->averages[$i] = ($divisor[$i] !== 0 ? $total[$i] / $divisor[$i] : 0);
                         }
 
-                        $cache->setCache($timestamp, static::$data[$courseId][$domain][$timestamp]);
-                        $cache->setCache("$timestamp-averages", $this->averages);
+                        $this->getCache()->setCache($timestamp, static::$data[$courseId][$d][$timestamp]);
+                        $this->getCache()->setCache("$timestamp-averages", $this->averages);
                     }
                 }
             }
             return is_array(static::$data) &&
                 is_array(static::$data[$courseId]) &&
-                is_array(static::$data[$courseId][$domain]) &&
-                is_array(static::$data[$courseId][$domain][$timestamp]) &&
-                count(static::$data[$courseId][$domain][$timestamp]) > 0;
+                is_array(static::$data[$courseId][$d]) &&
+                is_array(static::$data[$courseId][$d][$timestamp]) &&
+                count(static::$data[$courseId][$d][$timestamp]) > 0;
         }
     }
 }

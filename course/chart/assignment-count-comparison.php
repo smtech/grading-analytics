@@ -2,6 +2,8 @@
 
 require_once 'common.inc.php';
 
+use smtech\GradingAnalytics\Snapshots\Domain;
+
 $output = [
     'type' => 'bar',
     'data' => [
@@ -15,9 +17,13 @@ $output = [
     ]
 ];
 
-$data = (empty($_REQUEST['department_id']) ? $toolbox->getSchoolSnapshot($_REQUEST['course_id']) : $toolbox->getDepartmentSnapshot($_REQUEST['course_id']));
+$data = (empty($_REQUEST['department_id']) ?
+    $toolbox->getSnapshot($_REQUEST['course_id'], Domain::SCHOOL()) :
+    $toolbox->getSnapshot($_REQUEST['course_id'], Domain::DEPARTMENT())
+);
 usort($data, function ($left, $right) {
-    return ($left['assignments_due_count'] + $left['dateless_assignment_count']) - ($right['assignments_due_count'] + $right['dateless_assignment_count']);
+    return ($left['assignments_due_count'] + $left['dateless_assignment_count']) -
+        ($right['assignments_due_count'] + $right['dateless_assignment_count']);
 });
 foreach ($data as $row) {
     $output['data']['datasets'][] = [
