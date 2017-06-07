@@ -144,37 +144,37 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1124579094"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1606559395"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1124579094" class="accordion-body collapse in">
+            <div id="namespace-1606559395" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-509473928"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2081737630"></a>
                                 <a href="../namespaces/smtech.html" style="margin-left: 30px; padding-left: 0">smtech</a>
             </div>
-            <div id="namespace-509473928" class="accordion-body collapse ">
+            <div id="namespace-2081737630" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1511310889"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-618273801"></a>
                                 <a href="../namespaces/smtech.GradingAnalytics.html" style="margin-left: 30px; padding-left: 0">GradingAnalytics</a>
             </div>
-            <div id="namespace-1511310889" class="accordion-body collapse ">
+            <div id="namespace-618273801" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-773282723"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1888403629"></a>
                                 <a href="../namespaces/smtech.GradingAnalytics.HeatMap.html" style="margin-left: 30px; padding-left: 0">HeatMap</a>
             </div>
-            <div id="namespace-773282723" class="accordion-body collapse ">
+            <div id="namespace-1888403629" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -191,19 +191,19 @@
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-557824367"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-9058068"></a>
                                 <a href="../namespaces/smtech.GradingAnalytics.Snapshots.html" style="margin-left: 30px; padding-left: 0">Snapshots</a>
             </div>
-            <div id="namespace-557824367" class="accordion-body collapse ">
+            <div id="namespace-9058068" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                                                     <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-938613910"></a>
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1549069152"></a>
                                 <a href="../namespaces/smtech.GradingAnalytics.Snapshots.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
             </div>
-            <div id="namespace-938613910" class="accordion-body collapse ">
+            <div id="namespace-1549069152" class="accordion-body collapse ">
                 <div class="accordion-inner">
 
                     
@@ -409,12 +409,12 @@
             <a id="property_teacherFilter" name="property_teacherFilter" class="anchor"></a>
             <article class="property">
                 <h3 class="public ">$teacherFilter</h3>
-                <pre class="signature">$teacherFilter : string|integer|false</pre>
-                <p><em>Temporary storage for teacher filters</em></p>
+                <pre class="signature">$teacherFilter : string|integer|boolean</pre>
+                <p><em>Teacher filter (a numerica Canvas user ID) for restricted views of data</em></p>
                 
 
                                 <h4>Type</h4>
-                string|integer|false
+                string|integer|boolean
                                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -824,7 +824,7 @@ domain/course combination, for example)</p>
             <article class="method">
                 <h3 class="public ">getAverage()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">getAverage(\smtech\GradingAnalytics\Snapshots\Average  <span class="argument">$average</span>) : float</pre>
+                <pre class="signature" style="margin-right: 54px;">getAverage(\smtech\GradingAnalytics\Snapshots\Average  <span class="argument">$average</span>) : double|false</pre>
                 <p><em>Get a particular average calculated across the snapshot</em></p>
                 
 
@@ -839,7 +839,10 @@ domain/course combination, for example)</p>
                 
                 
                                     <h4>Returns</h4>
-                    float
+                    double|false
+                                            &mdash; <p>Returns <code>FALSE</code> if an average could not be computed
+(e.g. if there are no stastics from which to
+compute it)</p>
                                     				
                             </article>
         </div>
@@ -1043,7 +1046,7 @@ statistics to work with, <code>FALSE</code> otherwise</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on June 7th, 2017 at 16:48.
+                    on June 7th, 2017 at 17:07.
                 </section>
             </section>
         </section>

@@ -281,11 +281,11 @@
 
 {block name="post-bootstrap-scripts"}
 <script>
-    graphs.loadGraph("#turnAroundComparison", "turn-around-comparison.php", "{$statistic['course[id]']}");
-    graphs.loadGraph("#turnAroundComparisonDept", "turn-around-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
-    graphs.loadGraph("#turnAroundHistory", "turn-around-history.php", "{$statistic['course[id]']}");
-    graphs.loadGraph("#createdModifiedHistogram", "created-modified-histogram.php", "{$statistic['course[id]']}");
-    graphs.loadGraph("#assignmentCountComparison", "assignment-count-comparison.php", "{$statistic['course[id]']}");
-    graphs.loadGraph("#assignmentCountComparisonDept", "assignment-count-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
+    gradingAnalytics.loadChart("#turnAroundComparison", "turn-around-comparison.php", "{$statistic['course[id]']}");
+    gradingAnalytics.loadChart("#turnAroundComparisonDept", "turn-around-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
+    gradingAnalytics.loadChart("#turnAroundHistory", "turn-around-history.php", "{$statistic['course[id]']}");
+    gradingAnalytics.loadChart("#createdModifiedHistogram", "created-modified-histogram.php", "{$statistic['course[id]']}");
+    gradingAnalytics.loadChart("#assignmentCountComparison", "assignment-count-comparison.php", "{$statistic['course[id]']}");
+    gradingAnalytics.loadChart("#assignmentCountComparisonDept", "assignment-count-comparison.php", "{$statistic['course[id]']}", "{$statistic['course[account_id]']}");
 </script>
 {/block}

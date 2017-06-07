@@ -49,8 +49,8 @@ class Snapshot extends CacheableDatabase
     protected $averages;
 
     /**
-     * Temporary storage for teacher filters
-     * @var string|integer|false
+     * Teacher filter (a numerica Canvas user ID) for restricted views of data
+     * @var string|integer|boolean
      */
     public static $teacherFilter;
 
@@ -174,7 +174,9 @@ class Snapshot extends CacheableDatabase
      * @see Average `Average` for available averages
      *
      * @param  Average $average
-     * @return float
+     * @return double|false Returns `FALSE` if an average could not be computed
+     *                      (e.g. if there are no stastics from which to
+     *                      compute it)
      */
     public function getAverage(Average $average)
     {
