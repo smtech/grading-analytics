@@ -1,6 +1,12 @@
 {
     "name": "smtech/grading-analytics",
     "description": "Track and present rich feedback on faculty behavior in Canvas (akin to the course analytics data on on students)",
+    "authors": [
+		{
+			"name": "Seth Battis",
+			"email": "sethbattis@stmarksschool.org"
+		}
+	],
 	"license": "GPL-3.0",
 	"config": {
 		"secure-http": false
@@ -32,17 +38,13 @@
         "smtech/stmarks-reflexive-canvas-lti": "^0.2",
 		"pear/log": "~1.12",
         "npm-asset/chart.js": "~2.2",
-        "battis/data-utilities": "^0.1"
+        "battis/data-utilities": "^0.1",
+        "battis/simplecache": "^1.0",
+        "myclabs/php-enum": "^1.0"
 	},
 	"autoload": {
         "psr-4": {
             "smtech\\GradingAnalytics\\": "src"
         }
-	},
-	"authors": [
-		{
-			"name": "Seth Battis",
-			"email": "sethbattis@stmarksschool.org"
-		}
-	]
+	}
 }

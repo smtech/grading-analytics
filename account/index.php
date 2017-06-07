@@ -47,29 +47,12 @@ do {
     }
 } while ($restricted && $permissionsAccount !== false);
 
-/* find the most recent day's timestamp */
-$response = $toolbox->mysql_query("
-    SELECT * FROM `course_statistics`
-        WHERE `course[account_id]` = '$account_id'" .
-        ($restricted ? "AND `teacher[id]s` regexp 'a:[0-9]+:\{(i:[0-9]+;i:[0-9]+;)*i:[0-9]+;i:$user_id;'" : '') . "
-        ORDER BY
-            `timestamp` DESC
-        LIMIT 1
-");
-$row = $response->fetch_assoc();
-preg_match('/(\d{4,4}-\d{2,2}-\d{2,2}).*/', $row['timestamp'], $match);
-
-$response = $toolbox->mysql_query("
-    SELECT * FROM `course_statistics`
-        WHERE
-            `course[account_id]` = '$account_id' AND `timestamp` like '{$match[1]}%'" .
-            ($restricted ? "AND `teacher[id]s` regexp 'a:[0-9]+:\{(i:[0-9]+;i:[0-9]+;)*i:[0-9]+;i:$user_id;'" : '') . "
-        ORDER BY
-            `timestamp` DESC,
-            `course[name]` ASC
-");
-
 /* figure out what the ID of this LTI is in Canvas */
+/*
+ * FIXME this works if you have only one placement per tool install, but will
+ * fail if the same install is placed in multiple contexts. The "right" thing
+ * to do would be to cache the Canvas tool ID per context.
+ */
 $toolId = $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID');
 if (empty($toolId)) {
     foreach ($toolbox->api_get('accounts/' . $_SESSION[ACCOUNT_ID] . '/external_tools', ['include_parents' => true]) as $tool) {
@@ -79,20 +62,6 @@ if (empty($toolId)) {
         }
     }
     $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID', $toolId);
-}
-
-$statistics = array();
-$firstCourseId = false;
-while (($statistic = $response->fetch_assoc()) && ($firstCourseId != $statistic['course[id]'])) {
-    if (!$firstCourseId) {
-        $firstCourseId = $statistic['course[id]'];
-    }
-
-    if ($toolId) {
-        $statistic['analytics_page'] = $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$statistic['course[id]']}/external_tools/$toolId";
-    }
-
-    $statistics[] = $statistic;
 }
 
 $toolbox->getSmarty()->addStylesheet(DataUtilities::URLfromPath(__DIR__ .  '/css/index.css'));
@@ -105,7 +74,7 @@ $toolbox->getSmarty()->registerPlugin(
     ]
 );
 $toolbox->smarty_assign([
-    'statistics' => $statistics,
+    'statistics' => $toolbox->getSnapshot($_SESSION[ACCOUNT_ID], Domain::DEPARTMENT, true, ($restricted ? $user_id : false)),
     'departments' => $departments
 ]);
 $toolbox->smarty_display('department-summary.tpl');

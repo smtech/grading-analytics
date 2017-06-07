@@ -7,17 +7,11 @@ use Battis\HierarchicalSimpleCache;
 
 class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 {
-    protected $courseHistory = [];
+    const TOOL_CANVAS_EXTERNAL_TOOL_ID = 'TOOL_CANVAS_EXTERNAL_TOOL_ID';
 
-    const DEPT = 0;
-    const SCHOOL = 1;
+    protected $history;
 
-    protected $snapshots = [[], []];
-
-    const AVERAGE_TURN_AROUND = 0;
-    const AVERAGE_ASSIGNMENT_COUNT = 1;
-
-    protected $numbers = [[], []];
+    protected $snapshots;
 
     public function getGenerator()
     {
@@ -37,6 +31,15 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
         return $this->generator;
     }
 
+    protected function loadConfiguration($configFilePath, $forceRecache = false)
+    {
+        parent::loadConfiguration($configFilePath, $forceRecache);
+
+        if ($forceRecache) {
+            $this->clearConfig(self::TOOL_CANVAS_EXTERNAL_TOOL_ID);
+        }
+    }
+
     private $GRAPH_DATA_COUNT = 0;
     public function graphWidth($dataCount = false)
     {
@@ -54,121 +57,19 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
         return $this->graphWidth() * GRAPH_ASPECT_RATIO;
     }
 
-    public function getMostCurrentCourseTimestamp($courseId)
+    public function getHistory($courseId)
     {
-        return substr($this->getCourseHistory($courseId)[0]['timestamp'], 0, 10);
-    }
-
-    public function getDepartmentId($courseId)
-    {
-        return $this->getCourseHistory($courseId)[0]['course[account_id]'];
-    }
-
-    public function getCourseHistory($courseId)
-    {
-        if (empty($this->courseHistory)) {
-            $cache = new HierarchicalSimpleCache($this->getMySql(), $this->config(self::TOOL_ID));
-            $cache->pushKey('course');
-            $this->courseHistory = $cache->getCache($courseId);
-            if (empty($this->courseHistory)) {
-                if ($response = $this->mysql_query("
-                    SELECT * FROM `course_statistics`
-                        WHERE
-                            `course[id]` = '$courseId'
-                        ORDER BY
-                            `timestamp` DESC
-                ")) {
-                    while ($row = $response->fetch_assoc()) {
-                        $this->courseHistory[] = $row;
-                    }
-                    $cache->setCache($courseId, $this->courseHistory);
-                }
-            }
+        if (!is_a($this->history, History::class)) {
+            $this->history = new History($this, $courseId);
         }
-        return $this->courseHistory;
+        return $this->history->getHistory();
     }
 
-    public function getCourseSnapshot($courseId)
-    {
-        $history = $this->getCourseHistory($courseId);
-        if (!empty($history)) {
-            return $history[0];
-        }
-        return false;
-    }
-
-    public function getDepartmentSnapshot($courseId)
-    {
-        return $this->getSnapshot($courseId, self::DEPT);
-    }
-
-    public function getSchoolSnapshot($courseId)
-    {
-        return $this->getSnapshot($courseId, self::SCHOOL);
-    }
-
-    public function getSnapshot($courseId, $domain = self::DEPT)
+    public function getSnapshot($courseOrDepartmentId, Domain $domain, $isCourseId = true, $teacherFilter = false)
     {
         if (empty($this->snapshots[$domain])) {
-            $cache = new HierarchicalSimpleCache($this->getMySql(), $this->config(self::TOOL_ID));
-            $cache->pushKey('snapshot');
-            if ($domain === self::DEPT) {
-                $cache->pushKey('account');
-            }
-            $key = ($domain === self::DEPT ? $this->getDepartmentId($courseId) : 'school');
-            $this->snapshots[$domain] = $cache->getCache($key);
-            $this->numbers[$domain] = $cache->getCache("$key-numbers");
-            if (empty($this->snapshots[$domain])) {
-                if ($response = $this->mysql_query("
-                    SELECT * FROM `course_statistics`
-                        WHERE
-                            " . ($domain === self::DEPT ? "`course[account_id]` = '" . $this->getDepartmentId($courseId) . "' AND" : '') . "
-                            `timestamp` LIKE '" . $this->getMostCurrentCourseTimestamp($courseId) . "%'
-                        GROUP BY
-                            `course[id]`
-                        ORDER BY
-                            `timestamp` DESC
-                ")) {
-                    $totalTurnAround = 0;
-                    $divisorTurnAround = 0;
-                    $totalAssignmentCount = 0;
-
-                    while ($row = $response->fetch_assoc()) {
-                        $this->snapshots[$domain][] = $row;
-
-                        /* average turn-around */
-                        $totalTurnAround += $row['average_grading_turn_around'] * $row['student_count'] * $row['graded_assignment_count'];
-                        $divisorTurnAround += $row['student_count'] * $row['graded_assignment_count'];
-
-                        /* average assignment count */
-                        $totalAssignmentCount += $row['assignments_due_count'] + $row['dateless_assignment_count'];
-                    }
-                    $this->numbers[$domain][self::AVERAGE_TURN_AROUND] = $totalTurnAround / $divisorTurnAround;
-                    $this->numbers[$domain][self::AVERAGE_ASSIGNMENT_COUNT] = $totalAssignmentCount / $response->num_rows;
-
-                    $cache->setCache($key, $this->snapshots[$domain]);
-                    $cache->setCache("$key-numbers", $this->numbers[$domain]);
-                }
-            }
+            $this->snapshots[$domain] = new Snapshot($this, $domain, $courseOrDepartmentId, $isCourseId);
         }
-        return $this->snapshots[$domain];
-    }
-
-    public function averageTurnAround($courseId, $domain = self::DEPT)
-    {
-        $this->getSnapshot($courseId, $domain);
-        if (!empty($this->numbers[$domain][self::AVERAGE_TURN_AROUND])) {
-            return $this->numbers[$domain][self::AVERAGE_TURN_AROUND];
-        }
-        return false;
-    }
-
-    public function averageAssignmentCount($courseId, $domain = self::DEPT)
-    {
-        $this->getSnapshot($courseId, $domain);
-        if (!empty($this->numbers[$domain][self::AVERAGE_ASSIGNMENT_COUNT])) {
-            return $this->numbers[$domain][self::AVERAGE_ASSIGNMENT_COUNT];
-        }
-        return false;
+        return $this->snapshots[$domain]->getSnapshot($teacherFilter);
     }
 }
