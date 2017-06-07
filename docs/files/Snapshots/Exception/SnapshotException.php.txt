@@ -12,3 +12,4 @@ class SnapshotException extends \smtech\ReflexiveCanvasLTI\Exception\Configurati
 {
     const COURSE_ID = 100;
 }
+

@@ -88,3 +88,4 @@ class CacheableDatabase
         return $this->cache;
     }
 }
+

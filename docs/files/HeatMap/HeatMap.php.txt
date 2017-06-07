@@ -1,98 +1,137 @@
 <?php
+/** HeatMap class */
 
 namespace smtech\GradingAnalytics\HeatMap;
 
+/**
+ * Generate heatmap-style color-coding CSS
+ *
+ * @author Seth Battis <SethBattis@stmarksschool.org>
+ */
 class HeatMap
 {
+    /**
+     * Level specs to drive color-coding by fields
+     *
+     * @var array
+     */
     private static $levels = [];
 
-    public static function getLevel($key, $value)
+    /**
+     * Generate CSS based on a value
+     *
+     * @link https://smtech.github.io/grading-analytics/definitions.html Online
+     *       documentation of course statistic fields
+     *
+     * @param array $params An array of the format `['key' => 'field name',
+     *                      'value' => 'field value']`, where the field is one
+     *                      of those in course statistics
+     * @param \Smarty $smarty The Smarty instance making the call
+     * @return string
+     */
+    public static function getLevel($params, $smarty)
     {
-        if (empty($static::$levels)) {
-            static::$levels = array(
-                'average_grading_turn_around' => array(
-                    'warning' => array(
-                        new Level(3, 14, Level::$GREATER_THAN),
-                        new Level(2, 7, Level::$GREATER_THAN)
-                    ),
-                    'highlight' => array(
-                        new Level (3, 3, Level::$LESS_THAN),
-                        new Level (2, 7, Level::$LESS_THAN)
-                    )
-                ),
-                'average_assignment_lead_time' => array(
-                    'warning' => array(
-                        new Level(3, 1, Level::$LESS_THAN),
-                        new Level(2, 2, Level::$LESS_THAN)
-                    ),
-                    'highlight' => array(
-                        new Level(3, 10, Level::$GREATER_THAN),
-                        new Level(2, 7, Level::$GREATER_THAN)
-                    )
-                ),
-                'average_submissions_graded' => array(
-                    'warning' => array(
-                        new Level(3, 0.5, Level::$LESS_THAN),
-                        new Level(2, 0.75, Level::$LESS_THAN)
-                    ),
-                    'highlight' => array(
-                        new Level(3, 1.0, Level::$GREATER_THAN_OR_EQUAL),
-                        new Level(2, 0.9, Level::$GREATER_THAN)
-                    )
-                ),
-                'dateless_assignment_count' => array(
-                    'warning' => array(
-                        new Level(3, 20, Level::$GREATER_THAN),
-                        new Level(2, 10, Level::$GREATER_THAN)
-                    ),
-                    'highlight' => array(
-                        new Level(3, 1, Level::$LESS_THAN),
-                        new Level(2, 5, Level::$LESS_THAN)
-                    )
-                ),
-                'gradeable_assignment_count' => array(
-                    'warning' => array(
-                        new Level(3, 0, Level::$LESS_THAN_OR_EQUAL)
-                    )
-                ),
-                'graded_assignment_count' => array(
-                    'warning' => array(
-                        new Level(3, 0, Level::$LESS_THAN_OR_EQUAL)
-                    )
-                ),
-                'created_after_due_count' => array(
-                    'warning' => array(
-                        new Level(3, 10, Level::$GREATER_THAN),
-                        new Level(2, 5, Level::$GREATER_THAN)
-                    ),
-                    'highlight' => array(
-                        new Level(3, 1, Level::$LESS_THAN),
-                        new Level(2, 5, Level::$LESS_THAN)
-                    )
-                ),
-                'zero_point_assignment_count' => array(
-                    'warning' => array(
-                        new Level(3, 10, Level::$GREATER_THAN_OR_EQUAL),
-                        new Level(2, 0, Level::$GREATER_THAN)
-                    )
-                )
-            );
+        $key = false;
+        $value = false;
+        foreach ($params as $k => $v) {
+            switch ($k) {
+                case 'key':
+                    $key = $v;
+                    break;
+                case 'value':
+                    $value = $v;
+                    break;
+            }
+        }
+        if ($key === false || $value == false) {
+            return "";
         }
 
-        foreach (static::$levels[$key] as $mode => $modeLevels) {
+        if (empty(self::$levels)) {
+            self::$levels = [
+                'average_grading_turn_around' => [
+                    'warning' => [
+                        new Level(3, 14, Comparison::GT()),
+                        new Level(2, 7, Comparison::GT())
+                    ],
+                    'highlight' => [
+                        new Level (3, 3, Comparison::LT()),
+                        new Level (2, 7, Comparison::LT())
+                    ]
+                ],
+                'average_assignment_lead_time' => [
+                    'warning' => [
+                        new Level(3, 1, Comparison::LT()),
+                        new Level(2, 2, Comparison::LT())
+                    ],
+                    'highlight' => [
+                        new Level(3, 10, Comparison::GT()),
+                        new Level(2, 7, Comparison::GT())
+                    ]
+                ],
+                'average_submissions_graded' => [
+                    'warning' => [
+                        new Level(3, 0.5, Comparison::LT()),
+                        new Level(2, 0.75, Comparison::LT())
+                    ],
+                    'highlight' => [
+                        new Level(3, 1.0, Comparison::GTE()),
+                        new Level(2, 0.9, Comparison::GT())
+                    ]
+                ],
+                'dateless_assignment_count' => [
+                    'warning' => [
+                        new Level(3, 20, Comparison::GT()),
+                        new Level(2, 10, Comparison::GT())
+                    ],
+                    'highlight' => [
+                        new Level(3, 1, Comparison::LT()),
+                        new Level(2, 5, Comparison::LT())
+                    ]
+                ],
+                'gradeable_assignment_count' => [
+                    'warning' => [
+                        new Level(3, 0, Comparison::LTE())
+                    ]
+                ],
+                'graded_assignment_count' => [
+                    'warning' => [
+                        new Level(3, 0, Comparison::LTE())
+                    ]
+                ],
+                'created_after_due_count' => [
+                    'warning' => [
+                        new Level(3, 10, Comparison::GT()),
+                        new Level(2, 5, Comparison::GT())
+                    ],
+                    'highlight' => [
+                        new Level(3, 1, Comparison::LT()),
+                        new Level(2, 5, Comparison::LT())
+                    ]
+                ],
+                'zero_point_assignment_count' => [
+                    'warning' => [
+                        new Level(3, 10, Comparison::GTE()),
+                        new Level(2, 0, Comparison::GT())
+                    ]
+                ]
+            ];
+        }
+
+        foreach (self::$levels[$key] as $mode => $modeLevels) {
             foreach ($modeLevels as $level) {
                 $match = false;
-                switch ($level->comparison) {
-                    case Level::$GREATER_THAN:
+                switch ($level->comparison->getValue()) {
+                    case Comparison::GT:
                         $match = $value > $level->value;
                         break;
-                    case Level::$GREATER_THAN_OR_EQUAL:
+                    case Comparison::GTE:
                         $match = $value >= $level->value;
                         break;
-                    case Level::$LESS_THAN:
+                    case Comparison::LT:
                         $match = $value < $level->value;
                         break;
-                    case Level::$LESS_THAN_OR_EQUAL:
+                    case Comparison::LTE:
                         $match = $value <= $level->value;
                         break;
                 }

@@ -17,3 +17,4 @@ class Domain extends Enum
     const DEPARTMENT = 1;
     const COURSE = 2;
 }
+

@@ -299,3 +299,4 @@ class Snapshot extends CacheableDatabase
         }
     }
 }
+

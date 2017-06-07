@@ -139,3 +139,4 @@ class History extends CacheableDatabase
         return false;
     }
 }
+

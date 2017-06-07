@@ -1,11 +1,42 @@
 <?php
+/** Toolbox class */
 
 namespace smtech\GradingAnalytics;
 
 use smtech\LTI\Configuration\Option;
+use smtech\GradingAnalytics\Snapshots\Domain;
+use smtech\GradingAnalytics\Snapshots\History;
+use smtech\GradingAnalytics\Snapshots\Snapshot;
 
+/**
+ * A reflexive Canvas LTI toolbox
+ *
+ * @author Seth Battis <SethBattis@stmarksschool.org>
+ */
 class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 {
+    const TOOL_CANVAS_EXTERNAL_TOOL_ID = 'TOOL_CANVAS_EXTERNAL_TOOL_ID';
+
+    /**
+     * Course statistics history
+     * @var History
+     */
+    protected $history;
+
+    /**
+     * Course statistics snapshots
+     * @var Statistic[]
+     */
+    protected $snapshots;
+
+    /**
+     * Configure LTI configuration XML generator to include course and account
+     * navigation placements.
+     *
+     * {@inheritDoc}
+     *
+     * @return \smtech\LTI\Configuration\Generator
+     */
     public function getGenerator()
     {
         parent::getGenerator();
@@ -20,74 +51,76 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
             'visibility',
             'admins'
         );
+
+        return $this->generator;
     }
 
-    private $GRAPH_DATA_COUNT = 0;
-    public function graphWidth($dataCount = false)
+    /**
+     * Extend load configuration to reset `TOOL_CANVAS_EXTERNAL_TOOL_ID`
+     *
+     * @param string $configFilePath
+     * @param  boolean $forceRecache
+     * @return void
+     */
+    protected function loadConfiguration($configFilePath, $forceRecache = false)
     {
-        if ($dataCount) {
-            $this->GRAPH_DATA_COUNT = $dataCount;
+        parent::loadConfiguration($configFilePath, $forceRecache);
+
+        if ($forceRecache) {
+            $this->clearConfig(self::TOOL_CANVAS_EXTERNAL_TOOL_ID);
         }
-        return max(GRAPH_MIN_WIDTH, $this->GRAPH_DATA_COUNT * GRAPH_BAR_WIDTH);
     }
 
-    public function graphHeight($dataCount = false)
+    /**
+     * Get the course statistics history for a particular course
+     *
+     * @link https://smtech.github.io/grading-analytics/definitions.html Online
+     *       documentation of course statistic fields
+     *
+     * @param string|integer $courseId Numerica Canvas course ID
+     * @return array|false One row per course statistic collected daily, as
+     *                         described in the documentation, or `FALSE` if no
+     *                         statistics are available
+     */
+    public function getHistory($courseId)
     {
-        if ($dataCount) {
-            $this->GRAPH_DATA_COUNT = $dataCount;
+        if (!is_a($this->history, History::class)) {
+            $this->history = new History($this, $courseId);
         }
-        return graphWidth() * GRAPH_ASPECT_RATIO;
+        return $this->history->getHistory();
     }
 
-    public function averageTurnAround($departmentId = false)
+    /**
+     * Get a snapshot across a particular domain relevant to a course or
+     * department
+     *
+     * @link https://smtech.github.io/grading-analytics/definitions.html Online
+     *       documentation of course statistic fields
+     *
+     * @param string|integer $courseOrDepartmentId A numeric Canvas course or
+     *        ccount ID (course is is assumed unless explicitly specified by
+     *        `$isCourseId`)
+     * @param  Domain $domain Domain across which to take snapshot
+     * @param  boolean $isCourseId (Optional, defaults to `TRUE`) whether or
+     *                             not `$courseOrDepartmentId` is a course
+     *                             (`TRUE`) or department (`FALSE`) Id
+     * @param string|integer|boolean $teacherFilter (Optional, defaults to
+     *                                              `FALSE`) An optional filter
+     *                                              to limit the snapshot data
+     *                                              to courses taught by a
+     *                                              particular numerica Canvas
+     *                                              user ID
+     * @return array|false One row per course statistic collected daily, as
+     *                         described in the documentation, or `FALSE` if no
+     *                         statistics are available
+     */
+    public function getSnapshot($courseOrDepartmentId, Domain $domain, $isCourseId = true, $teacherFilter = false)
     {
-        $stats = $this->sql_query("
-            SELECT * FROM `course_statistics`
-                WHERE
-                    `average_grading_turn_around` > 0 " .
-                    (
-                        $departmentId ?
-                            "AND `course[account_id]` = '$departmentId' " :
-                            ''
-                    ) . "
-                GROUP BY
-                    `course[id]`
-                ORDER BY
-                    `timestamp` DESC
-        ");
-
-        $total = 0;
-        $divisor = 0;
-        while ($row = $stats->fetch_assoc()) {
-            $total += $row['average_grading_turn_around'] * $row['student_count'] * $row['graded_assignment_count'];
-            $divisor += $row['student_count'] * $row['graded_assignment_count'];
+        $d = $domain->getValue();
+        if (empty($this->snapshots[$d])) {
+            $this->snapshots[$d] = new Snapshot($this, $domain, $courseOrDepartmentId, $isCourseId);
         }
-        return $total / $divisor;
-    }
-
-    public function averageAssignmentCount($departmentId = false)
-    {
-        $stats = $this->sql_query("
-            SELECT * FROM (
-                SELECT * FROM `course_statistics`" .
-                    (
-                        $departmentId ? "
-                            WHERE
-                                `course[account_id]` = '$departmentId'" :
-                            ''
-                    ) . "
-                    ORDER BY
-                        `timestamp` DESC
-            ) AS `stats`
-                GROUP BY
-                    `course[id]`
-        ");
-
-        $total = 0;
-        while ($row = $stats->fetch_assoc()) {
-            $total += $row['assignments_due_count'] + $row['dateless_assignment_count'];
-        }
-        return $total / $stats->num_rows;
+        return $this->snapshots[$d]->getSnapshot($teacherFilter);
     }
 }
 

@@ -1,21 +1,47 @@
 <?php
+/** Level class */
 
 namespace smtech\GradingAnalytics\HeatMap;
 
-class Level {
-	public static $GREATER_THAN = 0;
-	public static $GREATER_THAN_OR_EQUAL = 1;
-	public static $LESS_THAN_OR_EQUAL = 2;
-	public static $LESS_THAN = 3;
+/**
+ * Comparable levels of something
+ *
+ * Used for generating heatmap-style color-coding
+ *
+ * @author Seth Battis <SethBattis@stmarksschool.org>
+ */
+class Level
+{
+    /**
+     * Level of color-coding (less is better)
+     * @var integer
+     */
+    public $level;
 
-	public $level;
-	public $value;
-	public $comparison;
+    /**
+     * Cut-off value for level
+     * @var integer
+     */
+    public $value;
 
-	public function __construct($level, $value, $comparison) {
-		$this->level = $level;
-		$this->value = $value;
-		$this->comparison = $comparison;
-	}
+    /**
+     * Comparison direction to determine inclusion in level
+     * @var Comparison
+     */
+    public $comparison;
+
+    /**
+     * Construct a Level object
+     *
+     * @param integer $level Color-coding level
+     * @param integer $value Cut-off value
+     * @param Comparison $comparison Comparison direction
+     */
+    public function __construct($level, $value, Comparison $comparison)
+    {
+        $this->level = $level;
+        $this->value = $value;
+        $this->comparison = $comparison;
+    }
 }
 
