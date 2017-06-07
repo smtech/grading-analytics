@@ -66,7 +66,7 @@
 						<td class="sorting-value">{$statistic['zero_point_assignment_count']}</td>
 						<td><span{getLevel key='zero_point_assignment_count' value=$statistic['zero_point_assignment_count']}>{$statistic['zero_point_assignment_count']}</span></td>
 						<td><a class="btn btn-default" target="_blank" href="{$statistic['gradebook_url']}">Gradebook</a></td>
-						<td><a class="btn btn-default" target="_blank" href="{$statistic['analytics_page']}">Grading Analytics</a></td>
+						{if !empty($statistic['analytics_page'])}<td><a class="btn btn-default" target="_blank" href="{$statistic['analytics_page']}">Grading Analytics</a></td>{/if}
 					</tr>
 				{/foreach}
 			</body>

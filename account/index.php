@@ -5,6 +5,7 @@ require_once 'common.inc.php';
 use Battis\DataUtilities;
 use smtech\StMarksSmarty\StMarksSmarty;
 use smtech\ReflexiveCanvasLTI\LTI\ToolProvider;
+use smtech\GradingAnalytics\Toolbox;
 use smtech\GradingAnalytics\HeatMap\HeatMap;
 
 /*
@@ -68,14 +69,29 @@ $response = $toolbox->mysql_query("
             `course[name]` ASC
 ");
 
+/* figure out what the ID of this LTI is in Canvas */
+$toolId = $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID');
+if (empty($toolId)) {
+    foreach ($toolbox->api_get('accounts/' . $_SESSION[ACCOUNT_ID] . '/external_tools', ['include_parents' => true]) as $tool) {
+        if ($tool['url'] == $toolbox->config(Toolbox::TOOL_LAUNCH_URL)) {
+            $toolId = $tool['id'];
+            break;
+        }
+    }
+    $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID', $toolId);
+}
+
 $statistics = array();
 $firstCourseId = false;
 while (($statistic = $response->fetch_assoc()) && ($firstCourseId != $statistic['course[id]'])) {
     if (!$firstCourseId) {
         $firstCourseId = $statistic['course[id]'];
     }
-    // FIXME this shouldn't be hard coded!
-    $statistic['analytics_page'] = $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$statistic['course[id]']}/external_tools/1638";
+
+    if ($toolId) {
+        $statistic['analytics_page'] = $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$statistic['course[id]']}/external_tools/$toolId";
+    }
+
     $statistics[] = $statistic;
 }
 
