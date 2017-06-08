@@ -54,15 +54,39 @@ do {
  * fail if the same install is placed in multiple contexts. The "right" thing
  * to do would be to cache the Canvas tool ID per context.
  */
-$toolId = $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID');
+$toolId = $toolbox->config(Toolbox::TOOL_CANVAS_EXTERNAL_TOOL_ID);
 if (empty($toolId)) {
-    foreach ($toolbox->api_get('accounts/' . $_SESSION[ACCOUNT_ID] . '/external_tools', ['include_parents' => true]) as $tool) {
+    foreach ($toolbox->api_get(
+        'accounts/' . $_SESSION[ACCOUNT_ID] . '/external_tools',
+        [
+            'include_parents' => true
+        ]
+    ) as $tool) {
         if ($tool['url'] == $toolbox->config(Toolbox::TOOL_LAUNCH_URL)) {
             $toolId = $tool['id'];
             break;
         }
     }
-    $toolbox->config('TOOL_CANVAS_EXTERNAL_TOOL_ID', $toolId);
+    $toolbox->config(Toolbox::TOOL_CANVAS_EXTERNAL_TOOL_ID, $toolId);
+}
+
+/* figure out our root account ID */
+// FIXME same as above (one placement per install only!)
+if (empty($toolbox->config(Toolbox::TOOL_CANVAS_ACCOUNT_ID))) {
+    $accountId = $_SESSION[ACCOUNT_ID];
+    $installAccount = false;
+    do {
+        foreach ($toolbox->api_get("accounts/$accountId" . '/external_tools') as $tool) {
+            if ($tool['url'] == $toolbox->config(Toolbox::TOOL_LAUNCH_URL)) {
+                $installAccount = true;
+                break;
+            }
+        }
+        if (!$installAccount) {
+            $accountId = $toolbox->api_get("accounts/$accountId")['parent_account_id'];
+        }
+    } while (!$installAccount);
+    $toolbox->config(Toolbox::TOOL_CANVAS_ACCOUNT_ID, $accountId);
 }
 
 $toolbox->getSmarty()->addStylesheet(DataUtilities::URLfromPath(__DIR__ .  '/css/index.css'));

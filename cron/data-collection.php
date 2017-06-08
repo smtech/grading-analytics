@@ -37,14 +37,8 @@ function hoursRange($lower = 0, $upper = 86400, $step = 3600, $keyFormat = '', $
 
 function collectStatistics($term, Toolbox $toolbox)
 {
-    /*
-     * TODO make this configurable -- I've hard-coded in the root of our
-     * Academics sub-account, which contains all of our departmental
-     * sub-accounts. This account ID _could_ be collected via the account
-     * navigation link (which conveys the account ID)
-     */
     $courses = $toolbox->api_get(
-        '/accounts/132/courses',
+        '/accounts/' . $toolbox->config(Toolbox::TOOL_CANVAS_ACCOUNT_ID) . '/courses',
         array(
             'with_enrollments' => 'true',
             'enrollment_term_id' => $term
@@ -66,7 +60,8 @@ function collectStatistics($term, Toolbox $toolbox)
             'created_after_due_count' => 0,
             'gradeable_assignment_count' => 0,
             'graded_assignment_count' => 0,
-            'zero_point_assignment_count' => 0
+            'zero_point_assignment_count' => 0,
+            'analytics_page' => $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$course['id']}/external_tools/" . $toolbox->config(Toolbox::TOOL_CANVAS_EXTERNAL_TOOL_ID)
         );
 
         $teacherIds = array();

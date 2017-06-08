@@ -73,4 +73,5 @@ else
     printf "Data collection job scheduled via $APACHE_USER crontab\n"
 fi
 
-printf "\nPoint your web browser at this directory to complete installation.\n\n"
+printf "\nPoint your web browser at this directory to complete installation.\n"
+printf "\nVisit the account navigation placement of this LTI after installing it in Canvas to complete configuration for data collection\n";

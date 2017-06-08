@@ -16,6 +16,7 @@ use smtech\GradingAnalytics\Snapshots\Snapshot;
 class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 {
     const TOOL_CANVAS_EXTERNAL_TOOL_ID = 'TOOL_CANVAS_EXTERNAL_TOOL_ID';
+    const TOOL_CANVAS_ACCOUNT_ID = 'TOOL_CANVAS_ACCOUNT_ID';
 
     /**
      * Course statistics history
@@ -68,6 +69,7 @@ class Toolbox extends \smtech\StMarksReflexiveCanvasLTI\Toolbox
 
         if ($forceRecache) {
             $this->clearConfig(self::TOOL_CANVAS_EXTERNAL_TOOL_ID);
+            $this->clearConfig(self::TOOL_CANVAS_ACCOUNT_ID);
         }
     }
 
