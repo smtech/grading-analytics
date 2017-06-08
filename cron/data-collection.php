@@ -1,11 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-define('DEBUGGING', DEBUGGING_LOG);
-define('IGNORE_LTI', true);
+define('IGNORE_UI', true);
 
 require_once __DIR__ . '/../common.inc.php';
 require_once __DIR__ . '/../constants.inc.php';
+
+use smtech\GradingAnalytics\Toolbox;
+use smtech\CanvasPest\CanvasPest;
 
 // http://stackoverflow.com/a/21896310
 function hoursRange($lower = 0, $upper = 86400, $step = 3600, $keyFormat = '', $value = '', $valueIsFormat = false)
@@ -33,10 +35,15 @@ function hoursRange($lower = 0, $upper = 86400, $step = 3600, $keyFormat = '', $
     return $times;
 }
 
-function collectStatistics($term, $api, $sql, $metadata)
+function collectStatistics($term, Toolbox $toolbox)
 {
-    // TODO make this configurable
-    $courses = $api->get(
+    /*
+     * TODO make this configurable -- I've hard-coded in the root of our
+     * Academics sub-account, which contains all of our departmental
+     * sub-accounts. This account ID _could_ be collected via the account
+     * navigation link (which conveys the account ID)
+     */
+    $courses = $toolbox->api_get(
         '/accounts/132/courses',
         array(
             'with_enrollments' => 'true',
@@ -53,19 +60,18 @@ function collectStatistics($term, $api, $sql, $metadata)
             'course[id]' => $course['id'],
             'course[name]' => $course['name'],
             'course[account_id]' => $course['account_id'],
-            'gradebook_url' => 'https://' . parse_url($metadata['CANVAS_API_URL'], PHP_URL_HOST) . "/courses/{$course['id']}/gradebook2",
+            'gradebook_url' => $_SESSION[CANVAS_INSTANCE_URL] . "/courses/{$course['id']}/gradebook2",
             'assignments_due_count' => 0,
             'dateless_assignment_count' => 0,
             'created_after_due_count' => 0,
             'gradeable_assignment_count' => 0,
             'graded_assignment_count' => 0,
-            'zero_point_assignment_count' => 0,
-            'analytics_page' => $metadata['APP_URL'] . "/course-summary.php?course_id={$course['id']}"
+            'zero_point_assignment_count' => 0
         );
 
         $teacherIds = array();
         $teacherNames = array();
-        $teachers = $api->get(
+        $teachers = $toolbox->api_get(
             "/courses/{$course['id']}/enrollments",
             array(
                 'type[]' => 'TeacherEnrollment'
@@ -78,13 +84,13 @@ function collectStatistics($term, $api, $sql, $metadata)
         $statistic['teacher[id]s'] = serialize($teacherIds);
         $statistic['teacher[sortable_name]s'] = serialize($teacherNames);
 
-        $account = $api->get("/accounts/{$course['account_id']}");
+        $account = $toolbox->api_get("/accounts/{$course['account_id']}");
         $statistic['account[name]'] = $account['name'];
 
         // ignore classes with no teachers (how do they even exist? weird.)
         if (count($teacherIds) != 0) {
             $statistic['student_count'] = 0;
-            $students = $api->get(
+            $students = $toolbox->api_get(
                 "/courses/{$course['id']}/enrollments",
                 array(
                     'type[]' => 'StudentEnrollment'
@@ -94,7 +100,7 @@ function collectStatistics($term, $api, $sql, $metadata)
 
             // ignore classes with no students
             if ($statistic['student_count'] != 0) {
-                $assignments = $api->get(
+                $assignments = $toolbox->api_get(
                     "/courses/{$course['id']}/assignments"
                 );
 
@@ -144,7 +150,7 @@ function collectStatistics($term, $api, $sql, $metadata)
                                 }
 
                                 // build submission statistic
-                                $submissions = $api->get(
+                                $submissions = $toolbox->api_get(
                                     "/courses/{$course['id']}/assignments/{$assignment['id']}/submissions"
                                 );
                                 foreach ($submissions as $submission) {
@@ -206,50 +212,29 @@ function collectStatistics($term, $api, $sql, $metadata)
                     $values[] = $value;
                 }
                 $query .= ' (`' . implode('`, `', $fields) . "`) VALUES ('" . implode("', '", $values) . "')";
-                $result = $sql->query($query);
-                /* displayError(
-                    array(
-                        'gradedSubmissionsCount' => $gradedSubmissionsCount,
-                        'turnAroundTimeTally' => $turnAroundTimeTally,
-                        'statistic' => $statistic,
-                        'query' => $query,
-                        'result' => $result
-                    ),
-                    true
-                ); */
+                $result = $toolbox->mysql_query($query);
             }
         }
     }
 }
 
-//debugFlag('START');
-
-/* create an API connector if not already extant */
-if (empty($api)) {
-    $api = new CanvasPest($metadata['CANVAS_API_URL'], $metadata['CANVAS_API_TOKEN']);
-}
+/* force API configuration from config file */
+$toolbox->setApi(new CanvasPest(
+    $_SESSION[CANVAS_INSTANCE_URL] . '/api/v1',
+    $toolbox->config(Toolbox::TOOL_CANVAS_API)['token']
+));
 
 /* collect data on terms currently in session */
-$terms = $api->get('accounts/1/terms');
-$now = strtotime('now');
-foreach ($terms['enrollment_terms'] as $term) {
-    if (isset($term['start_at']) && isset($term['end_at'])) {
-        if ((strtotime($term['start_at']) <= $now) && ($now <= strtotime($term['end_at']))) {
-            collectStatistics($term['id'], $api, $sql, $metadata);
+try {
+    $terms = $toolbox->api_get('accounts/1/terms');
+    $now = strtotime('now');
+    foreach ($terms['enrollment_terms'] as $term) {
+        if (isset($term['start_at']) && isset($term['end_at'])) {
+            if ((strtotime($term['start_at']) <= $now) && ($now <= strtotime($term['end_at']))) {
+                collectStatistics($term['id'], $toolbox);
+            }
         }
     }
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
-
-/* check to see if this data collection has been scheduled. If it hasn't,
-   schedule it to run nightly. */
-/* thank you http://stackoverflow.com/a/4421284 ! */
-$crontab = DATA_COLLECTION_CRONTAB . ' ' . realpath('.') . '/data-collection.sh';
-$crontabs = shell_exec('crontab -l');
-if (strpos($crontabs, $crontab) === false) {
-    $filename = md5(time()) . '.txt';
-    file_put_contents("/tmp/$filename", $crontabs . $crontab . PHP_EOL);
-    shell_exec("crontab /tmp/$filename");
-    debugFlag("added new scheduled data-collection to crontab");
-}
-
-//debugFlag('FINISH');
